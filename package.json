@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/mapbox/mason-js#readme",
   "devDependencies": {
+    "dotenv": "^4.0.0",
     "tape": "^4.8.0"
   }
 }
