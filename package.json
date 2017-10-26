@@ -4,7 +4,7 @@
   "description": "js client for mason",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "tape test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/mapbox/mason-js/issues"
   },
-  "homepage": "https://github.com/mapbox/mason-js#readme"
+  "homepage": "https://github.com/mapbox/mason-js#readme",
+  "devDependencies": {
+    "tape": "^4.8.0"
+  }
 }
