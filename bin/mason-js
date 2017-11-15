@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+let fileReaderPromise = require('../lib/ini_file_reader.js');
+
+fileReaderPromise.then(function(result) {
+  console.log(result);
+  // download header only libraries
+  // download compiled libraries 
+  
+});

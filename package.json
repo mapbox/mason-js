@@ -3,8 +3,11 @@
   "version": "0.0.1",
   "description": "js client for mason",
   "main": "index.js",
+  "bin": {
+    "mason-js": "bin/mason-js"
+  },
   "scripts": {
-    "test": "tape test/*.test.js"
+    "test": "TEST=true tape test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +22,8 @@
   "devDependencies": {
     "dotenv": "^4.0.0",
     "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.150.0"
   }
 }
