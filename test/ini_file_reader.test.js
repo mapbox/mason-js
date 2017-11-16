@@ -2,7 +2,7 @@ var test = require('tape');
 var fileReaderPromise = require('../lib/ini_file_reader.js');
 const fs = require('fs');
 const dotenvConfig = require('../config.js');
-dotenvConfig.envConfig()
+dotenvConfig.envConfig();
 
 test('read ini file', function(assert) {
   fileReaderPromise.then(function(result) {

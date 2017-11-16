@@ -24,6 +24,7 @@
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "aws-sdk": "^2.150.0"
+    "aws-sdk": "^2.150.0",
+    "request": "^2.83.0"
   }
 }
