@@ -5,9 +5,11 @@ const dotenvConfig = require('../config.js');
 dotenvConfig.envConfig();
 
 test('read ini file', function(assert) {
+  var headerPackage = {'name':'protozero', 'version':'1.5.1', 'headers':true}
+  var compiledPackage = { 'name': 'ccache', 'version': '3.6.4', 'headers': false }
   fileReaderPromise.then(function(result) {
-    assert.equal(result['headerOnlyLibraries'][0],'protozero=1.5.1');
-    assert.equal(result['compiledLibraries'][0],'ccache=3.6.4');
+    assert.deepEqual(result[0],headerPackage);
+    assert.deepEqual(result[2], compiledPackage);
     assert.end()
   });
 });
