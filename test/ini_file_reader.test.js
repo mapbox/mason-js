@@ -1,29 +1,36 @@
 var test = require('tape');
 var fs = require('fs');
-var dotenvConfig = require('../config.js');
-dotenvConfig.envConfig();
+var fileReaderPromise = require('../lib/ini_file_reader.js');
+
 var os = require('os');
 var platform = os.platform();
 var sinon = require("sinon");
 var pmock = require("pmock");
 var FakeEnv = require('fake-env');
 
+// process.env.TEST = true; 
 
 test('read ini file', function(assert) {
-  process.env.TEST = true;
-  var dotenvConfig = require('../config.js');
-  dotenvConfig.envConfig();
+  var p = './test/fixtures/mason-versions.ini';
+
+  const env = new FakeEnv({
+    MASON_INI_PATH: p
+  });
+
   var headerPackage = {'name':'protozero', 'version':'1.5.1', 'headers':true, 'os': null, 'awsPath': 'headers/protozero/1.5.1.tar.gz'}
   if ( platform === 'darwin'){
     var compiledPackage = { 'name': 'ccache', 'version': '3.6.4', 'headers': null, 'os': 'osx-x86_64', 'awsPath': 'osx-x86_64/ccache/3.6.4.tar.gz' }
   }else if(platform === 'linux'){
     var compiledPackage = { 'name': 'ccache', 'version': '3.6.4', 'headers': null, 'os': 'linux-x86_64', 'awsPath': 'linux-x86_64/ccache/3.6.4.tar.gz' }
   }
-  var fileReaderPromise = require('../lib/ini_file_reader.js');
+  console.log('path');
+  console.log(process.env.MASON_INI_PATH);
 
   fileReaderPromise.then(function(result) {
     assert.deepEqual(result[0],headerPackage);
     assert.deepEqual(result[2], compiledPackage);
+    env.restore();
+
     assert.end()
   });
 });
@@ -31,19 +38,16 @@ test('read ini file', function(assert) {
 test('ini file wrong order', function(assert) {
   // file doesn't exist
   var testPath = './test/fixtures/wrong-order.ini';
-  // process.env.MASON_INI_PATH = testPath;
-  // assert.equal(process.env.MASON_INI_PATH, './test/fixtures/mason-versions.ini', 'correct');
+
   const env = new FakeEnv({
     MASON_INI_PATH: testPath
   });
 
   console.log(process.env.MASON_INI_PATH);
-  // assert.equal(process.env.MASON_INI_PATH, './test/fixtures/wrong-order.ini', 'ooooh its been mocked!');
-  var fileReaderPromise = require('../lib/ini_file_reader.js');
+  assert.equal(process.env.MASON_INI_PATH, './test/fixtures/wrong-order.ini', 'ooooh its been mocked!');
 
   fileReaderPromise.then(function(result) {
-    // assert.equal(fs.existsSync(testPath), false);
-
+    assert.raise(result, 'You must declare headers first');
     console.log(result);
     env.restore();
     assert.equal(process.env.MASON_INI_PATH, './test/fixtures/mason-versions.ini', 'restored');
