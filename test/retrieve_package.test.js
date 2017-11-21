@@ -1,7 +1,7 @@
 var test = require('tape');
 var reader = require('../lib/retrieve_package.js');
-const fs = require('fs');
-const dotenvConfig = require('../config.js');
+var fs = require('fs');
+var dotenvConfig = require('../config.js');
 dotenvConfig.envConfig();
 
 // test('write package from S3 into mason-packages directory', function(assert) {

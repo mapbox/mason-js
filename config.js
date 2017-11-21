@@ -1,4 +1,4 @@
-let dotenv = require('dotenv');
+var dotenv = require('dotenv');
 
 function envConfig(){
   if(process.env.TEST){
