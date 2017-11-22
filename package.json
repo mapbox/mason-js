@@ -7,7 +7,7 @@
     "mason-js": "bin/mason-js"
   },
   "scripts": {
-    "test": "tape test/*.test.js"
+    "test": "TEST=true tape test/*.test.js"
   },
   "repository": {
     "type": "git",
