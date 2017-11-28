@@ -17,8 +17,8 @@ test('places binaries correctly', function(assert) {
   sinon.stub(request, 'get').yields(null, {statusCode: 200}, 'foo');       
 
   loader.download(url, function(err, result) {
-    console.log(err);
-    console.log(result);
+    // console.log(err);
+    // console.log(result);
     assert.end()
   });
 });
