@@ -6,6 +6,6 @@ global.appRoot = process.cwd();
 var masonPath = global.appRoot + '/mason-versions.ini';
 
 loader.install(masonPath, function(err, result){
-  if (err) console.log(err); 
+  if (err) return callback(err); 
   log.info('Mason Package Install Starting');
 });
