@@ -9,7 +9,7 @@ var path = require('path');
 global.appRoot = process.cwd();
 var masonPath = global.appRoot + '/mason-versions.ini';
 
-const filterFunc = (src, dest) => {
+var filterFunc = (src, dest) => {
   if (src.indexOf(".hpp")> -1 || src.indexOf(".h")> -1 ){
     if(fs.existsSync(dest)){
       fs.unlinkSync(dest);
@@ -28,9 +28,7 @@ loader.install(masonPath, function(err, result){
   sym.buildLinkPaths(function(err, symLinkPaths){
     log.info('Creating Symlinks');
     symLinkPaths.forEach(function(p){
-      var src = p[0];
-      var dst = p[1];
-      fse.copySync(src, dst, { clobber: true, filter:filterFunc });
+      fse.copySync(p[0], p[1], { clobber: true, filter:filterFunc });
     }); 
   });
 });
