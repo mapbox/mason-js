@@ -25,7 +25,7 @@ test('places binaries correctly', function(assert) {
 
   loader.download(url, function(err, result){
     // console.log(result, null, 2);
-    console.log(request.get.called);
+    assert.equal(request.get.called);
     // console.log(JSON.stringify(result, null, 2));
     // console.log(util.inspect(result, true, null))
 

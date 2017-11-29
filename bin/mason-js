@@ -34,4 +34,3 @@ fs.symlink(src,dst,function(err, result){
 
 });
 
-console.log('hi');
