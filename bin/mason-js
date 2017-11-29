@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+var loader = require('../lib/retrieve_package.js');
+const log = require('npmlog');
+
+global.appRoot = process.cwd();
+var masonPath = global.appRoot + '/mason-versions.ini';
+
+loader.install(masonPath, function(err, result){
+  if (err) throw err; 
+  log.info('Mason Package Install Starting');
+});
