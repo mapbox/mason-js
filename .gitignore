@@ -3,6 +3,6 @@ node_modules/
 npm-debug.log
 .env
 .test-env
-mason_packages
+mason_packages/
 mason.ini
 include/
