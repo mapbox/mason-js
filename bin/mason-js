@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+<<<<<<< HEAD
 // var loader = require('../lib/retrieve_package.js');
 // const log = require('npmlog');
 
@@ -25,12 +26,22 @@ var dst = path.relative(global.appRoot, global.appRoot + '/mason_packages/.link/
 // var dst = global.appRoot + '/mason_packages/.link/ccache/protozero/bin && share';
 var filepath = path.dirname(dst);
 console.log(dst);
-// 
-
+ 
 mkdirp.sync(filepath);
+
 fs.symlink(src,dst,function(err, result){
   console.log(err);
   // console.log(result);
 
 });
 
+// var loader = require('../lib/retrieve_package.js');
+// const log = require('npmlog');
+
+// global.appRoot = process.cwd();
+// var masonPath = global.appRoot + '/mason-versions.ini';
+
+// loader.install(masonPath, function(err, result){
+//   if (err) throw err; 
+//   log.info('Mason Package Install Starting');
+// });
