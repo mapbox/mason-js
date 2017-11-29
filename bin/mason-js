@@ -1,0 +1,37 @@
+#!/usr/bin/env node
+// var loader = require('../lib/retrieve_package.js');
+// const log = require('npmlog');
+
+// global.appRoot = process.cwd();
+// var masonPath = global.appRoot + '/mason-versions.ini';
+
+// loader.install(masonPath, function(err, result){
+//   if (err) return callback(err); 
+//   log.info('Mason Package Install Starting');
+// });
+
+var fs = require('fs');
+var mkdirp = require('mkdirp');
+var path = require('path');
+
+global.appRoot = process.cwd();
+
+// prefix --> stays the same 
+// postfix --> changes 
+// header only 
+// want relative paths for /link symlink
+var src = global.appRoot + '/mason_packages/headers/protozero/1.5.1.tar.gz/include/protozero/byteswap.hpp';
+var dst = path.relative(global.appRoot, global.appRoot + '/mason_packages/.link/include/protozero/byteswap.hpp');
+// var dst = global.appRoot + '/mason_packages/.link/ccache/protozero/bin && share';
+var filepath = path.dirname(dst);
+console.log(dst);
+// 
+
+mkdirp.sync(filepath);
+fs.symlink(src,dst,function(err, result){
+  console.log(err);
+  // console.log(result);
+
+});
+
+console.log('hi');
