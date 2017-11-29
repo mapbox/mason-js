@@ -1,47 +1,44 @@
 #!/usr/bin/env node
-<<<<<<< HEAD
-// var loader = require('../lib/retrieve_package.js');
-// const log = require('npmlog');
-
-// global.appRoot = process.cwd();
-// var masonPath = global.appRoot + '/mason-versions.ini';
-
-// loader.install(masonPath, function(err, result){
-//   if (err) return callback(err); 
-//   log.info('Mason Package Install Starting');
-// });
-
+var loader = require('../lib/retrieve_package.js');
+var sym = require('../lib/symlink.js');
+var log = require('npmlog');
+var fse = require('fs-extra');
 var fs = require('fs');
-var mkdirp = require('mkdirp');
 var path = require('path');
 
 global.appRoot = process.cwd();
+var masonPath = global.appRoot + '/mason-versions.ini';
 
-// prefix --> stays the same 
-// postfix --> changes 
-// header only 
-// want relative paths for /link symlink
-var src = global.appRoot + '/mason_packages/headers/protozero/1.5.1.tar.gz/include/protozero/byteswap.hpp';
-var dst = path.relative(global.appRoot, global.appRoot + '/mason_packages/.link/include/protozero/byteswap.hpp');
-// var dst = global.appRoot + '/mason_packages/.link/ccache/protozero/bin && share';
-var filepath = path.dirname(dst);
-console.log(dst);
- 
-mkdirp.sync(filepath);
+const filterFunc = (src, dest) => {
+  if (src.indexOf(".hpp")> -1 || src.indexOf(".h")> -1 ){
+    if(fs.existsSync(dest)){
+      fs.unlinkSync(dest);
+    }
+    fs.symlinkSync(src,dest);
+    return false;
+  }else{
+    return true;
+  }
+}
 
-fs.symlink(src,dst,function(err, result){
-  console.log(err);
-  // console.log(result);
+loader.install(masonPath, function(err, result){
+  if (err) throw err; 
+  log.info('Mason Package Install Starting');
 
+  sym.buildLinkPaths(function(err, symLinkPaths){
+    log.info('Creating Symlinks');
+    symLinkPaths.forEach(function(p){
+      var src = p[0];
+      var dst = p[1];
+      fse.copySync(src, dst, { clobber: true, filter:filterFunc });
+    }); 
+  });
 });
 
-// var loader = require('../lib/retrieve_package.js');
-// const log = require('npmlog');
 
-// global.appRoot = process.cwd();
-// var masonPath = global.appRoot + '/mason-versions.ini';
 
-// loader.install(masonPath, function(err, result){
-//   if (err) throw err; 
-//   log.info('Mason Package Install Starting');
-// });
+
+
+
+
+
