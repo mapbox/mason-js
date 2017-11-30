@@ -6,3 +6,4 @@ npm-debug.log
 mason_packages/
 mason.ini
 include/
+mason-versions.ini
