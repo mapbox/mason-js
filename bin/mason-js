@@ -7,7 +7,7 @@ var fs = require('fs');
 var path = require('path');
 
 global.appRoot = process.cwd();
-var masonPath = global.appRoot + '/mason-versions.ini';
+var masonPath = path.join(global.appRoot, '/mason-versions.ini');
 
 var filterFunc = (src, dest) => {
   if (src.indexOf(".hpp")> -1 || src.indexOf(".h")> -1 ){
@@ -21,11 +21,12 @@ var filterFunc = (src, dest) => {
   }
 }
 
-loader.install(masonPath, function(err, result){
+loader.install(masonPath, function(err, packageLists){
   if (err) throw err; 
+  console.log(packageLists);
   log.info('Mason Package Install Starting');
 
-  sym.buildLinkPaths(function(err, symLinkPaths){
+  sym.buildLinkPaths(packageLists, function(err, symLinkPaths){
     log.info('Creating Symlinks');
     symLinkPaths.forEach(function(p){
       fse.copySync(p[0], p[1], { clobber: true, filter:filterFunc });
