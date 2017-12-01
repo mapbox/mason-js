@@ -24,7 +24,6 @@ var filterFunc = (src, dest) => {
 
 loader.install(masonPath, function(err, packageLists){
   if (err) throw err; 
-  console.log(packageLists);
   log.info('Mason Package Install Starting');
 
   sym.buildLinkPaths(packageLists, function(err, symLinkPaths){

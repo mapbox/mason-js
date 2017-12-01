@@ -3,7 +3,6 @@ var fs = require('fs');
 var os = require('os');
 var platform = os.platform();
 var sinon = require("sinon");
-var pmock = require("pmock");
 var FakeEnv = require('fake-env');
 var fileReader = require('../lib/ini_file_reader.js');
 
