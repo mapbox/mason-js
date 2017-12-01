@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "js client for mason",
   "main": "index.js",
+  "bin": {
+    "mason-js": "bin/mason-js"
+  },
   "scripts": {
     "test": "tape test/*.test.js"
   },
@@ -17,6 +20,17 @@
   },
   "homepage": "https://github.com/mapbox/mason-js#readme",
   "devDependencies": {
+    "dotenv": "^4.0.0",
     "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.150.0",
+    "fs-extra": "^4.0.2",
+    "mkdirp": "^0.5.1",
+    "npmlog": "^4.1.2",
+    "request": "^2.83.0",
+    "rimraf": "^2.6.2",
+    "sinon": "^4.1.2",
+    "tar": "^4.0.2"
   }
 }

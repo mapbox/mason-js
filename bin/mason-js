@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+var loader = require('../lib/retrieve_package.js');
+var sym = require('../lib/symlink.js');
+var log = require('npmlog');
+var fse = require('fs-extra');
+var fs = require('fs');
+var path = require('path');
+
+global.appRoot = process.cwd();
+var masonPath = path.join(global.appRoot, '/mason-versions.ini');
+
+var filterFunc = (src, dest) => {
+  if (src.indexOf(".hpp")> -1 || src.indexOf(".h")> -1 
+  || src.indexOf(".c")> -1 || src.indexOf(".cpp")> -1){
+    if(fs.existsSync(dest)){
+      fs.unlinkSync(dest);
+    }
+    fs.symlinkSync(src,dest);
+    return false;
+  }else{
+    return true;
+  }
+}
+
+loader.install(masonPath, function(err, packageLists){
+  if (err) throw err; 
+  log.info('Mason Package Install Starting');
+
+  sym.buildLinkPaths(packageLists, function(err, symLinkPaths){
+    log.info('Creating Symlinks');
+    symLinkPaths.forEach(function(p){
+      fse.copySync(p[0], p[1], { clobber: true, filter:filterFunc });
+    }); 
+  });
+});
+
+
+
+
+
+
+
+
