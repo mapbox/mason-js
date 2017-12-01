@@ -10,8 +10,7 @@ global.appRoot = process.cwd();
 var masonPath = path.join(global.appRoot, '/mason-versions.ini');
 
 var filterFunc = (src, dest) => {
-  if (src.indexOf(".hpp")> -1 || src.indexOf(".h")> -1 
-  || src.indexOf(".c")> -1 || src.indexOf(".cpp")> -1){
+  if (fs.lstatSync(src).isFile()){
     if(fs.existsSync(dest)){
       fs.unlinkSync(dest);
     }
