@@ -22,12 +22,12 @@ loader.install(masonPath, function(err, packageLists){
   if (err) throw err; 
   log.info('Mason Package Install Starting');
 
-  // sym.buildLinkPaths(packageLists, function(err, symLinkPaths){
-  //   log.info('Creating Symlinks');
-  //   symLinkPaths.forEach(function(p){
-  //     fse.copySync(p[0], p[1], { clobber: true, filter:filterFunc });
-  //   }); 
-  // });
+  sym.buildLinkPaths(packageLists, function(err, symLinkPaths){
+    log.info('Creating Symlinks');
+    symLinkPaths.forEach(function(p){
+      fse.copySync(p[0], p[1], { clobber: true, filter:filterFunc });
+    }); 
+  });
 });
 
 
