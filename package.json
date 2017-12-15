@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.150.0",
+    "d3-queue": "^3.0.7",
     "fs-extra": "^4.0.2",
     "mkdirp": "^0.5.1",
     "npmlog": "^4.1.2",
