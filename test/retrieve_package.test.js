@@ -51,6 +51,46 @@ test('[place binary] places binary', function(assert) {
     assert.end();
 }); 
 
+// test('[place binary] test emitter', function(assert) {
+//     if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
+
+//     var from = path.join(__dirname + '/fixtures/', 'protozero1.5.1.tar.gz');
+//     var to = path.join(__dirname + '/fixtures/out', 'protozero1.5.1.tar.gz');
+//     var outfile = path.join(__dirname + '/fixtures/out', 'protozero1.5.1', 'include', 'protozero', 'byteswap.hpp');
+
+//     var buffer = fs.readFileSync(from);
+//     var url = 'http://fakeurl.com'; 
+
+//     const mockStream = new stream.PassThrough();
+//     mockStream.push(buffer);
+//     mockStream.statusCode = 200;
+//     mockStream.emit('close', 'hi');
+
+//     mockStream.end(); 
+
+//     sinon.spy(mockStream, 'on'); 
+
+//     sinon.spy(mockStream, 'pipe');
+//     sinon.spy(log, 'info');
+    
+//     sinon.stub(request, 'get').returns(mockStream);
+
+//     retriever.place_binary(url, to, function(err, res){
+
+//       sinon.assert.calledOnce(mockStream.pipe);
+//       sinon.assert.calledOnce(log.info);
+//       console.log('mock call count', mockStream.on.callCount);
+
+//       console.log('mock', mockStream.on.getCall(0).args);
+//       assert.equal(log.info.getCall(0).args[0], 'tarball');
+//       assert.equal(log.info.getCall(0).args[1], 'done parsing tarball');
+//       assert.equal(fs.existsSync(outfile), true);
+
+//     });
+//     request.get.restore(); 
+//     assert.end();
+// }); 
+
 test('[place binary] gets a request error', function(assert) {
     if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
 
@@ -77,7 +117,6 @@ test('[place binary] gets a request error', function(assert) {
     request.get.restore(); 
     assert.end();
 
-
 }); 
 
 test('[place binary] request returns status code error ', function(assert) {
@@ -91,6 +130,8 @@ test('[place binary] request returns status code error ', function(assert) {
     mockStream.on = function (event, callback){ 
       if (event === 'response'){
         return callback(new Error()); 
+      }else if(event === 'response'){
+        return {statusCode:200}
       }
     }; 
 
@@ -115,15 +156,15 @@ test('[place binary] request returns close error ', function(assert) {
 
     const mockStream = {}; 
     mockStream.on = function (event, callback){ 
-      if (event === 'close'){
-        return callback(new Error()); 
-      }
+        if (event === 'close'){
+          return callback(new Error()); 
+        }
     }; 
 
     mockStream.pipe = sinon.stub();  
     
     sinon.stub(request, 'get').returns(mockStream);
-    // how do I get access to hte response object? 
+
     retriever.place_binary(url, to, function(err, res){
       assert.equal(err.message,'Connection closed while downloading tarball file');
     });
@@ -131,6 +172,8 @@ test('[place binary] request returns close error ', function(assert) {
     assert.end();
 
 });
+
+// still need to test afterTarball and on error for tarball extraction
 
 
 // test('[install] logs package already exists', function(assert) {
