@@ -87,7 +87,7 @@ test('[place binary] request returns status code error ', function(assert) {
     var from = 'from';
     var url = 'http://fakeurl.com'; 
 
-    const mockStream = {'statusCode':200}; 
+    const mockStream = {}; 
     mockStream.on = function (event, callback){ 
       if (event === 'response'){
         return callback(new Error()); 
@@ -106,31 +106,31 @@ test('[place binary] request returns status code error ', function(assert) {
 
 }); 
 
-// test('[place binary] request returns close error ', function(assert) {
-//     if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
+test('[place binary] request returns close error ', function(assert) {
+    if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
 
-//     var to = 'to';
-//     var from = 'from';
-//     var url = 'http://fakeurl.com'; 
+    var to = 'to';
+    var from = 'from';
+    var url = 'http://fakeurl.com'; 
 
-//     const mockStream = {'statusCode':200}; 
-//     mockStream.on = function (event, callback){ 
-//       if (event === 'close'){
-//         return callback(new Error()); 
-//       }
-//     }; 
+    const mockStream = {}; 
+    mockStream.on = function (event, callback){ 
+      if (event === 'close'){
+        return callback(new Error()); 
+      }
+    }; 
 
-//     mockStream.pipe = sinon.stub();  
+    mockStream.pipe = sinon.stub();  
     
-//     sinon.stub(request, 'get').returns(mockStream);
-//     // how do I get access to hte response object? 
-//     retriever.place_binary(url, to, function(err, res){
-//       assert.equal(err.message,'Connection closed while downloading tarball file');
-//     });
-//     request.get.restore(); 
-//     assert.end();
+    sinon.stub(request, 'get').returns(mockStream);
+    // how do I get access to hte response object? 
+    retriever.place_binary(url, to, function(err, res){
+      assert.equal(err.message,'Connection closed while downloading tarball file');
+    });
+    request.get.restore(); 
+    assert.end();
 
-// });
+});
 
 
 // test('[install] logs package already exists', function(assert) {
