@@ -9,6 +9,8 @@ var rimraf = require('rimraf');
 var ErrorHTTP = require('mapbox-error').ErrorHTTP;
 var stream = require('stream');
 var log = require('npmlog');
+var tar = require('tar');
+
 
 global.appRoot = process.cwd();
 
@@ -29,7 +31,6 @@ test('[place binary] places binary', function(assert) {
 
     const mockStream = new stream.PassThrough();
     mockStream.push(buffer);
-    mockStream.statusCode = 200;
 
     mockStream.end(); 
 
@@ -50,46 +51,6 @@ test('[place binary] places binary', function(assert) {
     request.get.restore(); 
     assert.end();
 }); 
-
-// test('[place binary] test emitter', function(assert) {
-//     if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
-
-//     var from = path.join(__dirname + '/fixtures/', 'protozero1.5.1.tar.gz');
-//     var to = path.join(__dirname + '/fixtures/out', 'protozero1.5.1.tar.gz');
-//     var outfile = path.join(__dirname + '/fixtures/out', 'protozero1.5.1', 'include', 'protozero', 'byteswap.hpp');
-
-//     var buffer = fs.readFileSync(from);
-//     var url = 'http://fakeurl.com'; 
-
-//     const mockStream = new stream.PassThrough();
-//     mockStream.push(buffer);
-//     mockStream.statusCode = 200;
-//     mockStream.emit('close', 'hi');
-
-//     mockStream.end(); 
-
-//     sinon.spy(mockStream, 'on'); 
-
-//     sinon.spy(mockStream, 'pipe');
-//     sinon.spy(log, 'info');
-    
-//     sinon.stub(request, 'get').returns(mockStream);
-
-//     retriever.place_binary(url, to, function(err, res){
-
-//       sinon.assert.calledOnce(mockStream.pipe);
-//       sinon.assert.calledOnce(log.info);
-//       console.log('mock call count', mockStream.on.callCount);
-
-//       console.log('mock', mockStream.on.getCall(0).args);
-//       assert.equal(log.info.getCall(0).args[0], 'tarball');
-//       assert.equal(log.info.getCall(0).args[1], 'done parsing tarball');
-//       assert.equal(fs.existsSync(outfile), true);
-
-//     });
-//     request.get.restore(); 
-//     assert.end();
-// }); 
 
 test('[place binary] gets a request error', function(assert) {
     if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
@@ -129,9 +90,8 @@ test('[place binary] request returns status code error ', function(assert) {
     const mockStream = {}; 
     mockStream.on = function (event, callback){ 
       if (event === 'response'){
-        return callback(new Error()); 
-      }else if(event === 'response'){
-        return {statusCode:200}
+        var res = {statusCode:400}; 
+        return callback(res); 
       }
     }; 
 
@@ -139,7 +99,7 @@ test('[place binary] request returns status code error ', function(assert) {
     
     sinon.stub(request, 'get').returns(mockStream);
     retriever.place_binary(url, to, function(err, res){
-      assert.equal(err.message,'undefined status code downloading tarball http://fakeurl.com');
+      assert.equal(err.message,'400 status code downloading tarball http://fakeurl.com');
     });
 
     request.get.restore();
@@ -173,25 +133,57 @@ test('[place binary] request returns close error ', function(assert) {
 
 });
 
+// test('[place binary] request returns tarball error ', function(assert) {
+//     if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
+
+//     var to = 'to';
+//     var from = 'from';
+//     var url = 'http://fakeurl.com'; 
+
+//     const mockStream = {}; 
+//     mockStream.on = function (event, callback){ 
+//         if (event === 'close'){
+//           return callback(new Error()); 
+//         }
+//     }; 
+
+//     mockStream.pipe = sinon.stub();  
+//     // mockStream.pipe.on = function (event, callback){ 
+//     //     if (event === 'close'){
+//     //       return sinon.stub(); 
+//     //     }
+//     // }; 
+    
+//     sinon.stub(request, 'get').returns(mockStream);
+//     sinon.stub(tar, 'extract').returns();
+
+//     retriever.place_binary(url, to, function(err, res){
+//       assert.equal(err.message,'Connection closed while downloading tarball file');
+//     });
+//     request.get.restore(); 
+//     assert.end();
+
+// });
+
 // still need to test afterTarball and on error for tarball extraction
 
 
-// test('[install] logs package already exists', function(assert) {
-//     var from = path.join(__dirname + '/fixtures/', 'protozero/1.5.1.tar.gz');
-//     var to = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1.tar.gz');
-//     var buffer = fs.readFileSync(from);
-//     var url = 'http://fakeurl.com'
-//     var res = {statusCode: 400, elapsedTime:20, on:sinon.stub(), res: {Body:buffer}}
+test('[install] logs package already exists', function(assert) {
+    var from = path.join(__dirname + '/fixtures/', 'protozero/1.5.1.tar.gz');
+    var to = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1.tar.gz');
+    var buffer = fs.readFileSync(from);
+    var url = 'http://fakeurl.com'
+    var res = {statusCode: 400, elapsedTime:20, on:sinon.stub(), res: {Body:buffer}}
     
-//     sinon.stub(retriever, 'download').returns(res);
+    sinon.stub(retriever, 'download').returns(res);
 
-//     retriever.place_binary(from, to, function(err, res){
-//       // console.log(err, res)
-//       retriever.download.restore(); 
-//     });
+    retriever.place_binary(from, to, function(err, res){
+      // console.log(err, res)
+      retriever.download.restore(); 
+    });
 
-//     assert.end();
-// }); 
+    assert.end();
+}); 
 
 
 // test('cleanup', (assert) => {
