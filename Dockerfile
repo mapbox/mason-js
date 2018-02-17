@@ -12,5 +12,6 @@ RUN mkdir -p /tmp/mason-js-src
 WORKDIR /tmp/mason-js-src
 COPY . /tmp/mason-js-src
 
-RUN npm install
+RUN npm install 
+RUN npm link
 CMD npm test

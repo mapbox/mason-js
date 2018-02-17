@@ -7,6 +7,8 @@ var FakeEnv = require('fake-env');
 var reader = require('../lib/ini_file_reader.js');
 var url = require('url');
 var exec = require('child_process').exec;
+var appDir = process.cwd();
+
 
 var helpText = 'Usage:\n  mason-js install \n\n  or \n\n  mason-js install <package> <package type>\n\nDescription:\n  mason-js is a JS client for mason that installs c++ packages locally (both header-only and compiled). mason-js can install all packages declared in a mason-versions.ini file or it can install a single package. \n\nExample:\n  mason-js install  \n\n  OR\n\n  mason-js install protozero=1.5.1 --type=header \n\nOptions:\n  --type [header or compiled]\n'
 
@@ -16,7 +18,7 @@ var headerPackage = { name: 'protozero',
   os: null, 
   awsPath: 'headers/protozero/1.5.1.tar.gz', 
   src: 'https://s3.amazonaws.com/mason-binaries/headers/protozero/1.5.1.tar.gz', 
-  dst: '/Users/annmillspaugh/mapbox/mason-js/mason_packages/headers/protozero/1.5.1' 
+  dst: appDir + '/mason_packages/headers/protozero/1.5.1' 
 }
 
 if ( platform === 'darwin'){
@@ -25,7 +27,7 @@ if ( platform === 'darwin'){
     os: 'osx-x86_64', 
     awsPath: 'osx-x86_64/ccache/3.6.4.tar.gz', 
     src: 'https://s3.amazonaws.com/mason-binaries/osx-x86_64/ccache/3.6.4.tar.gz', 
-    dst: '/Users/annmillspaugh/mapbox/mason-js/mason_packages/osx-x86_64/ccache/3.6.4' 
+    dst: appDir + '/mason_packages/osx-x86_64/ccache/3.6.4' 
   }
 }else if(platform === 'linux'){
   var compiledPackage = { name: 'ccache', 
@@ -33,7 +35,7 @@ if ( platform === 'darwin'){
     os: 'linux-x86_64', 
     awsPath: 'linux-x86_64/ccache/3.6.4.tar.gz', 
     src: 'https://s3.amazonaws.com/mason-binaries/linux-x86_64/ccache/3.6.4.tar.gz', 
-    dst: '/Users/annmillspaugh/mapbox/mason-js/mason_packages/linux-x86_64/ccache/3.6.4' 
+    dst: appDir + '/mason_packages/linux-x86_64/ccache/3.6.4' 
   }  
 }
 
