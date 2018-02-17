@@ -23,7 +23,7 @@ var filterFunc = (src, dest) => {
 }
 
 function execute(packages, callback){
-  loader.install(package, function(err, packageLists){
+  loader.install(packages, function(err, packageLists){
     if (err) throw err; 
     log.info('Mason Package Install Starting');
 
@@ -50,7 +50,9 @@ if (require.main === module) {
   }
 
   if (install === 'install' && !singlePackage){
+    console.log('hererere')
     reader.fileReader(masonPath, function(err, packages){
+      // console.log('packages!!', packages);
       execute(packages, function(err, result){
         if (err) return callback(err);
         log.info('Finished downloading packages')
@@ -64,12 +66,15 @@ if (require.main === module) {
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
   }
+  
+  if (install === 'install' && singlePackage && args.type){
+    var package = reader.buildParams(singlePackage, type);
+    execute(package, function(err, result){
+      if (err) return callback(err);
+      log.info('Finished downloading package')
+    });
+  }
 
-  var package = reader.buildParams(singlePackage, type);
-  execute(package, function(err, result){
-    if (err) return callback(err);
-    log.info('Finished downloading package')
-  });
 }
 
 
