@@ -21,23 +21,22 @@ var headerPackage = { name: 'protozero',
   dst: appDir + '/mason_packages/headers/protozero/1.5.1' 
 }
 
+var os; 
+
 if ( platform === 'darwin'){
-  var compiledPackage = { name: 'ccache', 
-    version: '3.6.4', headers: null, 
-    os: 'osx-x86_64', 
-    awsPath: 'osx-x86_64/ccache/3.6.4.tar.gz', 
-    src: 'https://s3.amazonaws.com/mason-binaries/osx-x86_64/ccache/3.6.4.tar.gz', 
-    dst: appDir + '/mason_packages/osx-x86_64/ccache/3.6.4' 
-  }
+  os = 'osx-x86_64'; 
 }else if(platform === 'linux'){
-  var compiledPackage = { name: 'ccache', 
-    version: '3.6.4', headers: null, 
-    os: 'linux-x86_64', 
-    awsPath: 'linux-x86_64/ccache/3.6.4.tar.gz', 
-    src: 'https://s3.amazonaws.com/mason-binaries/linux-x86_64/ccache/3.6.4.tar.gz', 
-    dst: appDir + '/mason_packages/linux-x86_64/ccache/3.6.4' 
-  }  
+  os = 'linux-x86_64';  
 }
+
+var compiledPackage = { name: 'ccache', 
+  version: '3.6.4', 
+  headers: null, 
+  os: `${os}`, 
+  awsPath: `${os}/ccache/3.6.4.tar.gz`, 
+  src: `https://s3.amazonaws.com/mason-binaries/${os}/ccache/3.6.4.tar.gz`, 
+  dst: appDir + `/mason_packages/${os}/ccache/3.6.4` 
+} 
 
 test('reads ini file correctly', function(assert) {
   var masonPath = './test/fixtures/mason-versions.ini';
