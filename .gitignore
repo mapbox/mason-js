@@ -7,3 +7,5 @@ mason_packages/
 mason.ini
 include/
 mason-versions.ini
+
+notes.txt
