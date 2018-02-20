@@ -35,6 +35,18 @@ step-library:
           npm link
           npm test
 
+  - &build-and-test-codecov
+      run:
+        name: Build and test
+        command: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+        
+          node -v
+          npm -v
+          npm install
+          npm link
+          npm run report-coverage
+
 jobs:
   build-osx-node-4:
     macos:
@@ -43,7 +55,7 @@ jobs:
       - checkout
       - run: echo 'export NVM_DIR=${HOME}/.nvm' >> $BASH_ENV
       - *install-node-4
-      - *build-and-test
+      - *build-and-test-codecov
 
   build-osx-node-6:
     macos:

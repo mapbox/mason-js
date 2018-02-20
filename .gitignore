@@ -1,11 +1,11 @@
 .DS_Store
 node_modules/
 npm-debug.log
-.env
-.test-env
 mason_packages/
 mason.ini
 include/
 mason-versions.ini
+.nyc_output/
+coverage.lcov
 
 notes.txt

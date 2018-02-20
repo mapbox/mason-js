@@ -7,7 +7,8 @@
     "mason-js": "bin/mason-js"
   },
   "scripts": {
-    "test": "tape test/*.test.js"
+    "test": "tape test/*.test.js", 
+    "report-coverage": "nyc tape test/*.test.js && nyc report --reporter=text-lcov > coverage.lcov && codecov -t 31ac8f86-2926-4777-a86d-791020355a3e"
   },
   "repository": {
     "type": "git",
@@ -25,10 +26,12 @@
   },
   "dependencies": {
     "aws-sdk": "^2.150.0",
+    "codecov": "^3.0.0",
     "d3-queue": "^3.0.7",
     "fs-extra": "^4.0.2",
     "mkdirp": "^0.5.1",
     "npmlog": "^4.1.2",
+    "nyc": "^11.4.1",
     "request": "^2.83.0",
     "rimraf": "^2.6.2",
     "sinon": "^4.1.2",
