@@ -1,60 +1,212 @@
 var test = require('tape');
-var loader = require('../lib/retrieve_package.js');
 var fs = require('fs');
-var dotenvConfig = require('../config.js');
-dotenvConfig.envConfig();
 var path = require('path');
 var sinon = require('sinon');
 var request = require('request');
+var retriever = require('../lib/retrieve_package');
+var rimraf = require('rimraf');
+var stream = require('stream');
+var log = require('npmlog');
+var fse = require('fs-extra');
 
 global.appRoot = process.cwd();
 
-// test('places binaries correctly', function(assert) {
-//   var url = 'https://s3.amazonaws.com/mason-binaries/headers/protozero/1.5.6.tar.gz';
+test('setup', (assert) => {
+  if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
+  assert.end();
+});
 
-//   // var expected = [{id: 'test-id' }, {id: 'test-id-two'}];
-//   // var s = sinon.spy(request, 'get');
+test('[place binary] places binary', function(assert) {
+  if (!fs.existsSync(__dirname + '/fixtures/out/protozero/1.5.1')) fse.mkdirpSync(__dirname + '/fixtures/out/protozero/1.5.1');
 
-//   sinon.stub(request, 'get').yields({statusCode: 200});
-//   // sinon.stub(request, 'get').yields(null, {statusCode: 200}, 'foo');       
-//   // var callback = sinon.spy();
-//       //We can use a spy as the callback so it's easy to verify
+  var src = path.join(__dirname + '/fixtures/', 'protozero1.5.1.tar.gz');
+  var dst = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1');
+  var outfile = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1', 'include', 'protozero', 'byteswap.hpp');
+  var url = 'http://fakeurl.com';
 
-//   loader.download(url, function(err, result){
-//     // console.log(result, null, 2);
-//     assert.equal(request.get.called);
-//     // console.log(JSON.stringify(result, null, 2));
-//     // console.log(util.inspect(result, true, null))
+  var options = {
+    name: 'protozero',
+    version: '1.5.1',
+    headers: true,
+    os: null,
+    awsPath: 'headers/protozero/1.5.1.tar.gz',
+    src: url,
+    dst: dst
+  };
 
-//     // console.log(r.firstCall.args);
-//     // assert.equal(r.firstCall.args[0].url, url);
-//     // console.log(s.callCount);
+  var buffer = fs.readFileSync(src);
 
-//     assert.end()
-//   });
-//   // sinon.assert.calledOnce(callback);
+  var mockStream = new stream.PassThrough();
+  mockStream.push(buffer);
+  mockStream.end();
+
+  sinon.spy(mockStream, 'pipe');
+  sinon.spy(log, 'info');
+
+  sinon.stub(request, 'get').returns(mockStream);
+
+  retriever.place_binary(options, function() {
+    sinon.assert.calledOnce(mockStream.pipe);
+    sinon.assert.calledOnce(log.info);
+    assert.equal(log.info.getCall(0).args[0], 'tarball');
+    assert.equal(log.info.getCall(0).args[1], 'done parsing tarball for protozero');
+    assert.equal(fs.existsSync(outfile), true);
+    fse.remove(path.join(__dirname + '/fixtures/out', 'protozero'), err => {
+      if (err) return console.error(err);
+    });
+    log.info.restore();
+    request.get.restore();
+    assert.end();
+  });
 
 
+});
 
-//   // loader.install(url, function(err, result) {
-//   //   var setNameSpy = sinon.spy(loader, 'place_binary');
-//   //   console.log(err);
-//   //   console.log('callcount')
-//   //   console.log(setNameSpy.callCount);
+test('[place binary] gets a request error', function(assert) {
+  if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
 
-//   //   // console.log(err);
-//   //   // console.log(result);
-//   //   assert.end()
-//   // });
-// });
+  var options = {
+    name: 'boost',
+    version: '1.3.0',
+    headers: true,
+    os: null,
+    awsPath: 'headers/boost/1.3.0.tar.gz',
+    src: 'http://fakeurl.com',
+    dst: 'dst'
+  };
 
+  const mockStream = {};
+  mockStream.on = function(event, callback) {
+    if (event === 'error') {
+      return callback(new Error('there was a request error'));
+    }
+  };
 
-// test('MASON_BUCKET not set', function(assert) {
-//   var masonPath = './test/fixtures/mason-versions.ini';
-//   var msg = 'You must set MASON_BUCKET as an environment variable.';
-//   loader.install(masonPath, function(err, result) {
-//     console.log(result);
-//     assert.equal(err.message, msg);
-//     assert.end()
-//   });
-// });
+  mockStream.pipe = sinon.stub();
+  mockStream.pipe.on = sinon.stub();
+
+  sinon.stub(request, 'get').returns(mockStream);
+
+  retriever.place_binary(options, function(err) {
+    assert.equal(err.message, 'there was a request error');
+    request.get.restore();
+    assert.end();
+  });
+});
+
+test('[place binary] request returns status code error ', function(assert) {
+  if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
+
+  var options = {
+    name: 'boost',
+    version: '1.3.0',
+    headers: true,
+    os: null,
+    awsPath: 'headers/boost/1.3.0.tar.gz',
+    src: 'http://fakeurl.com',
+    dst: 'dst'
+  };
+
+  const mockStream = {};
+  mockStream.on = function(event, callback) {
+    if (event === 'response') {
+      var res = { statusCode: 400 };
+      return callback(res);
+    }
+  };
+
+  mockStream.pipe = sinon.stub();
+
+  sinon.stub(request, 'get').returns(mockStream);
+  retriever.place_binary(options, function(err) {
+    assert.equal(err.message, '400 status code downloading tarball http://fakeurl.com');
+    request.get.restore();
+    assert.end();
+  });
+});
+
+test('[place binary] request returns close error ', function(assert) {
+  if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
+
+  var options = {
+    name: 'boost',
+    version: '1.3.0',
+    headers: true,
+    os: null,
+    awsPath: 'headers/boost/1.3.0.tar.gz',
+    src: 'http://fakeurl.com',
+    dst: 'dst'
+  };
+
+  const mockStream = {};
+  mockStream.on = function(event, callback) {
+    if (event === 'close') {
+      return callback(new Error());
+    }
+  };
+
+  mockStream.pipe = sinon.stub();
+
+  sinon.stub(request, 'get').returns(mockStream);
+
+  retriever.place_binary(options, function(err) {
+    assert.equal(err.message, 'Connection closed while downloading tarball file');
+    request.get.restore();
+    assert.end();
+  });
+});
+
+test('[check library] logs package already exists', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'boost/1.3.0.tar.gz');
+  var dst = path.join(__dirname + '/fixtures/', 'boost/1.3.0');
+
+  var options = {
+    name: 'boost',
+    version: '1.3.0',
+    headers: true,
+    os: null,
+    awsPath: 'headers/boost/1.3.0.tar.gz',
+    src: src,
+    dst: dst
+  };
+
+  sinon.spy(log, 'info');
+
+  retriever.checkLibraryExists(options, function(err, res) {
+    assert.equal(log.info.getCall(0).args[1], 'Success: boost already installed');
+    assert.equal(res, true);
+    log.info.restore();
+    assert.end();
+  });
+});
+
+test('[check library] creates directory paths', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'boost/1.3.0.tar.gz');
+  var dst = path.join(__dirname + '/fixtures/out', 'boost/1.3.0');
+
+  var options = {
+    name: 'boost',
+    version: '1.3.0',
+    headers: true,
+    os: null,
+    awsPath: 'headers/boost/1.3.0.tar.gz',
+    src: src,
+    dst: dst
+  };
+
+  retriever.checkLibraryExists(options, function(err, res) {
+    assert.equal(res, false);
+    assert.equal(fs.existsSync(__dirname + '/fixtures/out/boost/1.3.0'), true);
+    fse.remove(path.join(__dirname + '/fixtures/out', 'boost'), err => {
+      if (err) return console.error(err);
+    });
+    assert.end();
+  });
+});
+
+test('cleanup', (assert) => {
+  rimraf(__dirname + '/fixtures/out', (err) => {
+    assert.ifError(err);
+    assert.end();
+  });
+});
