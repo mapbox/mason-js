@@ -10,31 +10,19 @@ var args = require('minimist')(process.argv.slice(2));
 
 global.appRoot = process.cwd();
 var masonPath = path.join(global.appRoot, '/mason-versions.ini');
-
-var filterFunc = (src, dest) => {
-  if (src.indexOf('mason.ini') > -1) {
-    return false;
-  } else if (fs.lstatSync(src).isFile()){
-    fs.symlinkSync(src,dest);
-    return false;
-  }else{
-    return true;
-  }
-}
+var symlinkPath = path.join(global.appRoot, '/mason_packages/.link');
 
 function download(packages, callback){
+  log.info('Mason Package Install Starting');
   loader.install(packages, function(err, packageLists){
     if (err) throw err; 
-    log.info('Mason Package Install Starting');
 
-    sym.buildLinkPaths(packageLists, function(err, symLinkPaths){
-      if (err) return callback(err); 
+    log.info('Creating Symlinks');
 
-      log.info('Creating Symlinks');
-      symLinkPaths.forEach(function(p){
-        fse.copySync(p[0], p[1], { clobber: true, filter:filterFunc });
-      }); 
-    });
+    var paths = sym.buildLinkPaths(packageLists,symlinkPath);
+    sym.symLink(paths, function(err, result){
+      if (err) return callback(err);
+    }); 
   });
 }
 
