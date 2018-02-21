@@ -28,7 +28,7 @@ function download(packages, callback){
 
 if (require.main === module) {
   var install = args['_'][0]; 
-  var singlePackage = args['_'][1]; 
+  var singlePackage = args['_'][1];
   var type = args.type; 
 
   if (!install) {
