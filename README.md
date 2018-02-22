@@ -2,6 +2,8 @@
 
 [![codecov](https://codecov.io/gh/mapbox/mason-js/branch/master/graph/badge.svg)](https://codecov.io/gh/mapbox/mason-js)
 
+[![CircleCI](https://circleci.com/gh/mapbox/mason-js.svg?style=svg)](https://circleci.com/gh/mapbox/mason-js)
+
 # mason-js: a javascript client for mason 
 
 ## Why mason-js? 
