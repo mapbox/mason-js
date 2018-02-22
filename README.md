@@ -6,7 +6,7 @@
 
 ## Why mason-js? 
 
-Mason-js is a JS client for Mason, the C++ package manager. 
+Mason-js is a JS client for [Mason, the C++ package manager.](https://github.com/mapbox/mason) 
 
 This project is: 
 
