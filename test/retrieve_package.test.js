@@ -156,29 +156,29 @@ test('[place binary] request returns close error ', function(assert) {
   });
 });
 
-test('[check library] logs package already exists', function(assert) {
-  var src = path.join(__dirname + '/fixtures/', 'boost/1.3.0.tar.gz');
-  var dst = path.join(__dirname + '/fixtures/', 'boost/1.3.0');
+// test('[check library] logs package already exists', function(assert) {
+//   var src = path.join(__dirname + '/fixtures/', 'boost/1.3.0.tar.gz');
+//   var dst = path.join(__dirname + '/fixtures/', 'boost/1.3.0');
 
-  var options = {
-    name: 'boost',
-    version: '1.3.0',
-    headers: true,
-    os: null,
-    awsPath: 'headers/boost/1.3.0.tar.gz',
-    src: src,
-    dst: dst
-  };
+//   var options = {
+//     name: 'boost',
+//     version: '1.3.0',
+//     headers: true,
+//     os: null,
+//     awsPath: 'headers/boost/1.3.0.tar.gz',
+//     src: src,
+//     dst: dst
+//   };
 
-  sinon.spy(log, 'info');
+//   sinon.spy(log, 'info');
 
-  retriever.checkLibraryExists(options, function(err, res) {
-    assert.equal(log.info.getCall(0).args[1], 'Success: boost already installed');
-    assert.equal(res, true);
-    log.info.restore();
-    assert.end();
-  });
-});
+//   retriever.checkLibraryExists(options, function(err, res) {
+//     assert.equal(log.info.getCall(0).args[1], 'Success: boost already installed');
+//     assert.equal(res, true);
+//     log.info.restore();
+//     assert.end();
+//   });
+// });
 
 test('[check library] creates directory paths', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'boost/1.3.0.tar.gz');
