@@ -65,18 +65,14 @@ In short, mason-js:
 3. **Creates symlinks** a `.link` directory to package executables  
 
 
-![](https://d2mxuefqeaa7sj.cloudfront.net/s_7C1EF7C61F1103A056CF2B686855BFDE795E077FB8E67D45E05FCDD10B627635_1519328594367_image.png)
-
-
 **Remote** **Package Paths****:** 
 
-`s3://mason-binaries/{MASON_PLATFORM}-{MASON_PLATFORM_VERSION}/{package}/{version}.tar.gz`
+- Header-only: `s3://mason-binaries/headers/{package}/{version}.tar.gz`
 
-Note: The value of `MASON_PLATFORM_VERSION` is determined per platform:
+- Binaries: `s3://mason-binaries/{MASON_PLATFORM}-{MASON_PLATFORM_VERSION}/{package}/{version}.tar.gz`
 
-  - OSX and Linux: `uname -m`
-  - Android: normally is manually provided by setting the `env`  variable of `MASON_PLATFORM_VERSION` and/or `MASON_ANDROID_ABI`. If not provided it will default to `arm-v7-9`
-  - iOS: it is hardcoded to `8.0` currently
+
+Note: The value of `MASON_PLATFORM_VERSION` is determined per platform. 
 
 **Local** **Package Paths**:
 
