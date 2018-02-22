@@ -13,12 +13,14 @@ This project is:
 - The first standalone cross-platform client for Mason
 - Makes installing packages seamless for node c++ addons.
 - Could also be used in stacks that have nodejs as a dep 
-- We are able to remove mason’s custom install scripts and house all of our logic in a JS client. Diff of install script vs mason-js in node-cpp-skel https://github.com/mapbox/node-cpp-skel/compare/proposed-mason-js-port
-# How to use this? 
+- We are able to remove mason’s custom install scripts and house all of our logic in a JS client. [Diff of install script vs mason-js in node-cpp-skel.](https://github.com/mapbox/node-cpp-skel/compare/proposed-mason-js-port)
+
+## How to use this? 
 
 **Install all package dependencies** 
 
-`mason-js install`  - installs all packages from the `mason-versions.ini` file 
+```mason-js install```  
+- installs all packages from the `mason-versions.ini` file 
 
 Example `mason-versions.ini`:
 
@@ -37,11 +39,13 @@ Example `mason-versions.ini`:
 
 **Symlink Installed Packages**
 
-`mason-js link` - symlinks packages 
+```mason-js link``` 
+- symlinks packages 
 
 **Install a Single Package**
 
-`mason-js <package>=<version> --type=[header or compiled]`  - installs a single package  
+```mason-js <package>=<version> --type=[header or compiled]```  
+- installs a single package  
 
 *Example*
 
@@ -105,10 +109,10 @@ The Make file has a series of commands that run a Docker container locally. By u
 Make sure to set your `NPMAccessToken` in your environment before running any `make` commands.
 
 
-    - `make bash` - opens a terminal shell session in your Docker image
-    - `make build` - build your Docker image locally
-    - `make run` - send a message to the queue. (this command runs make build first)
-    - `make test` - run tests
+- `make bash` - opens a terminal shell session in your Docker image
+- `make build` - build your Docker image locally
+- `make run` - send a message to the queue. (this command runs make build first)
+- `make test` - run tests
 
 
 
