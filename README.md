@@ -10,9 +10,9 @@ Mason-js is a JS client for Mason, the C++ package manager.
 
 This project is: 
 
-- The first standalone cross-platform client for Mason
+- The first standalone cross-platform client for Mason.
 - Makes installing packages seamless for node c++ addons.
-- Could also be used in stacks that have nodejs as a dep 
+- Could also be used in stacks that have nodejs as a dep. 
 - We are able to remove mason’s custom install scripts and house all of our logic in a JS client. [Diff of install script vs mason-js in node-cpp-skel.](https://github.com/mapbox/node-cpp-skel/compare/proposed-mason-js-port)
 
 ## How to use this? 
@@ -96,14 +96,17 @@ Note: The value of `MASON_PLATFORM_VERSION` is determined per platform:
 # Development 
 
 **Install Local Dependencies** 
+
 ```npm install```
 
 ```npm link```
 
 **Run Tests**
+
 ```npm test``` 
 
 **Make commands**
+
 The Make file has a series of commands that run a Docker container locally. By using these commands, you’re able to simulate staging/production environments locally.
 
 Make sure to set your `NPMAccessToken` in your environment before running any `make` commands.
