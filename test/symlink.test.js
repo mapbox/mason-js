@@ -90,10 +90,10 @@ test('[symlink] fails to create symlink - directory not found', function(assert)
   var symlinkPath = path.join(global.appRoot, 'test/fixtures/out/mason_packages/.link');
 
   var paths = [
-    [appDir + '/test/fixtures/headers/protozro/1.5.1',
+    [appDir + '/test/fixtures/headers/protozro/1.5.1/',
       symlinkPath
     ],
-    [appDir + '/test/fixtures/osx-x8_64/cairo/1.14.8',
+    [appDir + '/test/fixtures/osx-x8_64/cairo/1.14.8/',
       symlinkPath
     ]
   ];
