@@ -1,1 +1,0 @@
-/Users/annmillspaugh/mapbox/mason-js/mason_packages/headers/boost/1.65.1/include/boost/geometry/iterators/detail/segment_iterator/range_segment_iterator.hpp

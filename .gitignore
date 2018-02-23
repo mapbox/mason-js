@@ -7,5 +7,6 @@ mason-versions.ini
 coverage.lcov
 
 mason-js/mason-packages/
+mason-js/mason-packages/.link
 
 notes.txt

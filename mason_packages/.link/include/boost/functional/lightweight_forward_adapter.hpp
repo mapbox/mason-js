@@ -1,1 +1,0 @@
-/Users/annmillspaugh/mapbox/mason-js/mason_packages/headers/boost/1.65.1/include/boost/functional/lightweight_forward_adapter.hpp

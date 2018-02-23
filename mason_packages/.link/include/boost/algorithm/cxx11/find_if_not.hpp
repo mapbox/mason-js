@@ -1,1 +1,0 @@
-/Users/annmillspaugh/mapbox/mason-js/mason_packages/headers/boost/1.65.1/include/boost/algorithm/cxx11/find_if_not.hpp
