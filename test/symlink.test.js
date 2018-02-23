@@ -70,10 +70,12 @@ test('[symlink] creates symlink', function(assert) {
   var cairo = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'cairo', 'cairo-ft.h');
 
   console.log('symlink path exists!', fs.existsSync(symlinkPath));
+  console.log('this is the dirname!', __dirname); 
 
   link.symLink(paths, function(err, result) {
     console.log('symlink path exists now!', fs.existsSync(symlinkPath));
-    console.log('protozero fixture exists', fs.exists(appDir + '/test/fixtures/headers/protozero/1.5.1/')); 
+    console.log('protozero fixture exists', fs.existsSync(appDir + '/test/fixtures/headers/protozero/1.5.1/')); 
+    console.log('protozero fixture with dirname exists', fs.existsSync(__dirname + '/fixtures/headers/protozero/1.5.1/')); 
 
     console.log('paths!', paths);
     console.log('symlinkPath!!!', symlinkPath);
