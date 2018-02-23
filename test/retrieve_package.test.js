@@ -172,14 +172,9 @@ test('[check library] logs package already exists', function(assert) {
 
   sinon.spy(log, 'info');
 
-  console.log('fixture boost exists!!', fs.existsSync(dst));
-
   retriever.checkLibraryExists(options, function(err, res) {
-    console.log('check lib error');
     if (err) console.log(err);
-    console.log('fixture boost exists now!!', fs.existsSync(dst));
-
-    // assert.equal(log.info.getCall(0).args[1], 'Success: boost already installed');
+    assert.equal(log.info.getCall(0).args[1], 'Success: boost already installed');
     assert.equal(res, true);
     log.info.restore();
     assert.end();
