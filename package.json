@@ -7,7 +7,7 @@
     "mason-js": "bin/mason-js"
   },
   "scripts": {
-    "test": "tape test/*.test.js",
+    "test": "npm run lint && tape test/*.test.js",
     "lint": "eslint .",
     "report-coverage": "nyc tape test/*.test.js && nyc report --reporter=text-lcov > coverage.lcov && codecov -t 31ac8f86-2926-4777-a86d-791020355a3e"
   },
@@ -31,7 +31,6 @@
     "aws-sdk": "^2.150.0",
     "codecov": "^3.0.0",
     "d3-queue": "^3.0.7",
-    "eslint": "^4.18.0",
     "fs-extra": "^4.0.2",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",

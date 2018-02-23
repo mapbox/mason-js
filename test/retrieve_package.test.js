@@ -173,6 +173,7 @@ test('[check library] logs package already exists', function(assert) {
   sinon.spy(log, 'info');
 
   retriever.checkLibraryExists(options, function(err, res) {
+    if (err) console.log(err);
     assert.equal(log.info.getCall(0).args[1], 'Success: boost already installed');
     assert.equal(res, true);
     log.info.restore();
