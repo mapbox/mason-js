@@ -10,7 +10,10 @@ var appDir = process.cwd();
 global.appRoot = process.cwd();
 
 test('setup', (assert) => {
-  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
+
+  if (fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.removeSync(__dirname + '/fixtures/out/mason_packages/.link');
+  
+  fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
   assert.end();
 });
 
@@ -51,7 +54,7 @@ test('[symlink] builds correct symlink paths', function(assert) {
   assert.end();
 });
 
-test.only('[symlink] creates symlink', function(assert) {
+test('[symlink] creates symlink', function(assert) {
   var symlinkPath = path.join(global.appRoot, 'test/fixtures/out/mason_packages/.link');
 
   var paths = [
@@ -69,10 +72,13 @@ test.only('[symlink] creates symlink', function(assert) {
   console.log('symlink path exists!', fs.existsSync(symlinkPath));
 
   link.symLink(paths, function(err, result) {
+    console.log('symlink path exists now!', fs.existsSync(symlinkPath));
+
     // console.log('paths!', paths);
     // console.log('symlinkPath!!!', symlinkPath);
     // console.log('proto out', proto);
     // console.log('cairo out', cairo);
+    if (err) console.log(err);
     assert.equal(result, true);
     assert.equal(fs.existsSync(proto), true);
     assert.equal(fs.existsSync(cairo), true);
@@ -99,7 +105,6 @@ test('[symlink] fails to create symlink - directory not found', function(assert)
 });
 
 test('cleanup', (assert) => {
-  console.log('cleanedup');
   rimraf(__dirname + '/fixtures/out', (err) => {
     assert.ifError(err);
     assert.end();
