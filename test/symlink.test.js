@@ -73,6 +73,7 @@ test('[symlink] creates symlink', function(assert) {
 
   link.symLink(paths, function(err, result) {
     console.log('symlink path exists now!', fs.existsSync(symlinkPath));
+    console.log('protozero fixture exists', fs.exists(appDir + '/test/fixtures/headers/protozero/1.5.1/')); 
 
     console.log('paths!', paths);
     console.log('symlinkPath!!!', symlinkPath);
