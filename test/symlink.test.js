@@ -63,10 +63,14 @@ test('[symlink] creates symlink', function(assert) {
     ]
   ];
 
-  var proto = path.join(__dirname + '/fixtures/out', 'mason_packages/.link', 'include', 'protozero', 'byteswap.hpp');
-  var cairo = path.join(__dirname + '/fixtures/out', 'mason_packages/.link', 'include', 'cairo', 'cairo-ft.h');
+  var proto = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'protozero', 'byteswap.hpp');
+  var cairo = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'cairo', 'cairo-ft.h');
 
   link.symLink(paths, function(err, result) {
+    console.log('paths!', paths);
+    console.log('symlinkPath!!!', symlinkPath);
+    console.log('proto out', proto);
+    console.log('cairo out', cairo);
     assert.equal(result, true);
     assert.equal(fs.existsSync(proto), true);
     assert.equal(fs.existsSync(cairo), true);
