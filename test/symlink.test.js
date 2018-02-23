@@ -74,10 +74,10 @@ test('[symlink] creates symlink', function(assert) {
   link.symLink(paths, function(err, result) {
     console.log('symlink path exists now!', fs.existsSync(symlinkPath));
 
-    // console.log('paths!', paths);
-    // console.log('symlinkPath!!!', symlinkPath);
-    // console.log('proto out', proto);
-    // console.log('cairo out', cairo);
+    console.log('paths!', paths);
+    console.log('symlinkPath!!!', symlinkPath);
+    console.log('proto out', proto);
+    console.log('cairo out', cairo);
     if (err) console.log(err);
     assert.equal(result, true);
     assert.equal(fs.existsSync(proto), true);
