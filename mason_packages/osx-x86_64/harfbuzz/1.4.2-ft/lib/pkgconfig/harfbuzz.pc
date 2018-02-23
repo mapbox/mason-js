@@ -1,0 +1,13 @@
+prefix=/Users/travis/build/mapbox/mason/mason_packages/osx-x86_64/harfbuzz/1.4.2-ft
+exec_prefix=/Users/travis/build/mapbox/mason/mason_packages/osx-x86_64/harfbuzz/1.4.2-ft
+libdir=/Users/travis/build/mapbox/mason/mason_packages/osx-x86_64/harfbuzz/1.4.2-ft/lib
+includedir=/Users/travis/build/mapbox/mason/mason_packages/osx-x86_64/harfbuzz/1.4.2-ft/include
+
+Name: harfbuzz
+Description: HarfBuzz text shaping library
+Version: 1.4.2
+
+Libs: -L${libdir} -lharfbuzz
+Libs.private:    
+Requires.private:  
+Cflags: -I${includedir}/harfbuzz

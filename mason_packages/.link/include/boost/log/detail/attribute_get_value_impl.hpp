@@ -1,0 +1,1 @@
+/Users/annmillspaugh/mapbox/mason-js/mason_packages/headers/boost/1.65.1/include/boost/log/detail/attribute_get_value_impl.hpp

@@ -1,0 +1,1 @@
+/Users/annmillspaugh/mapbox/mason-js/mason_packages/headers/boost/1.65.1/include/boost/fusion/support/detail/segmented_fold_until_impl.hpp
