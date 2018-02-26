@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var loader = require('../lib/retrieve_package.js');
-var reader = require('../lib/ini_file_reader.js');
+var reader = require('../lib/file_reader.js');
 var sym = require('../lib/symlink.js');
 var log = require('npmlog');
 var fse = require('fs-extra');
