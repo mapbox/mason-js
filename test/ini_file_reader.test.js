@@ -1,5 +1,6 @@
 var test = require('tape');
 var os = require('os');
+var path = require('path');
 var platform = os.platform();
 var reader = require('../lib/ini_file_reader.js');
 var exec = require('child_process').exec;
@@ -15,6 +16,8 @@ var headerPackage = {
   src: 'https://s3.amazonaws.com/mason-binaries/headers/protozero/1.5.1.tar.gz',
   dst: appDir + '/mason_packages/headers/protozero/1.5.1'
 };
+
+var command_path = path.join(__dirname,'../bin/mason-js');
 
 var system;
 
@@ -69,7 +72,7 @@ test('build params returns correct package object with cli args', function(asser
 });
 
 test('[mason-js] missing args', (assert) => {
-  exec('mason-js', (err, stdout, stderr) => {
+  exec(command_path, (err, stdout, stderr) => {
     assert.ok(err);
     assert.equal(stdout, helpText, 'no stdout');
     assert.equal(stderr, 'missing mason-js args\n', 'expected args');
@@ -77,8 +80,8 @@ test('[mason-js] missing args', (assert) => {
   });
 });
 
-test('[mason-js] missing args', (assert) => {
-  exec('mason-js install protozero=1.5.1', (err, stdout, stderr) => {
+test('[mason-js] missing package type', (assert) => {
+  exec(command_path + ' install protozero=1.5.1', (err, stdout, stderr) => {
     assert.ok(err);
     assert.equal(stdout, helpText, 'no stdout');
     assert.equal(stderr, 'include package type with package info: example protozero=1.5.1 --type=header\n', 'expected args');
