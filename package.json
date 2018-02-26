@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npm run lint && tape test/*.test.js",
     "lint": "eslint .",
-    "report-coverage": "nyc tape --all test/*.test.js && nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "report-coverage": "nyc --all tape test/*.test.js && nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "repository": {
     "type": "git",
