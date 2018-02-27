@@ -6,14 +6,15 @@ var reader = require('./lib/file_reader.js');
 var fse = require('fs-extra');
 var fs = require('fs');
 
+/* eslint-disable */
+
+
 function download(packages, callback){
   log.info('Mason Package Install Starting');
   loader.install(packages, function(err){
     if (err) throw err;
   });
 }
-
-/* eslint-disable */
 
 function link(masonPath, callback){
   if (fs.existsSync(path.join(process.cwd(), '/mason_packages/.link'))) {
@@ -27,8 +28,8 @@ function link(masonPath, callback){
     });
   });
 }  
-      
-/* eslint-enable */
+
+/* eslint-disable */
 
 
 module.exports = {download:download, 
