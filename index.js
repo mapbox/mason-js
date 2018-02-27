@@ -3,7 +3,6 @@ var loader = require('./lib/retrieve_package.js');
 var sym = require('./lib/symlink.js');
 var path = require('path');
 var reader = require('./lib/file_reader.js');
-var masonPath = path.join(process.cwd(), '/mason-versions.ini');
 var fse = require('fs-extra');
 var fs = require('fs');
 
@@ -14,18 +13,23 @@ function download(packages, callback){
   });
 }
 
+/* eslint-disable */
+
 function link(masonPath, callback){
   if (fs.existsSync(path.join(process.cwd(), '/mason_packages/.link'))) {
-    fse.removeSync(path.join(process.cwd(), '/mason_packages/.link'))
+    fse.removeSync(path.join(process.cwd(), '/mason_packages/.link'));
   }
-
   reader.fileReader(masonPath, function(err, packages){
+    if (err) return callback(err);
     var paths = sym.buildLinkPaths(packages,path.join(process.cwd(), '/mason_packages/.link'));
     sym.symLink(paths, function(err){
       if (err) return callback(err);
     });
   });
-}
+}  
+      
+/* eslint-enable */
+
 
 module.exports = {download:download, 
-  link:link}
+  link:link};

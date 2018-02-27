@@ -5,6 +5,7 @@ var path = require('path');
 var rimraf = require('rimraf');
 var fse = require('fs-extra');
 var appDir = process.cwd();
+var index = require('../');
 
 global.appRoot = process.cwd();
 
