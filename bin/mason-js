@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var loader = require('../lib/retrieve_package.js');
-var reader = require('../lib/ini_file_reader.js');
+var reader = require('../lib/file_reader.js');
+var download = require('../');
 var sym = require('../lib/symlink.js');
 var log = require('npmlog');
 var fse = require('fs-extra');
@@ -8,23 +9,7 @@ var fs = require('fs');
 var path = require('path');
 var args = require('minimist')(process.argv.slice(2));
 
-global.appRoot = process.cwd();
-var masonPath = path.join(global.appRoot, '/mason-versions.ini');
-var symlinkPath = path.join(global.appRoot, '/mason_packages/.link');
-
-function download(packages, callback){
-  log.info('Mason Package Install Starting');
-  loader.install(packages, function(err, packageLists){
-    if (err) throw err; 
-
-    log.info('Creating Symlinks');
-
-    var paths = sym.buildLinkPaths(packageLists,symlinkPath);
-    sym.symLink(paths, function(err, result){
-      if (err) return callback(err);
-    }); 
-  });
-}
+var masonPath = path.join(process.cwd(), '/mason-versions.ini');
 
 if (require.main === module) {
   var install = args['_'][0]; 

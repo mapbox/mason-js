@@ -32,7 +32,6 @@ step-library:
           node -v
           npm -v
           npm install
-          npm link
           npm test
 
   - &build-and-test-codecov
@@ -44,7 +43,6 @@ step-library:
           node -v
           npm -v
           npm install
-          npm link
           npm run report-coverage
 
 jobs:
