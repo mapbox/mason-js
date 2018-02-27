@@ -39,8 +39,9 @@ if (require.main === module) {
   }
   
   if (install === 'install' && singlePackage && args.type){
+    var params = generatePackageObject(singlePackage);
     var package = reader.buildParams(singlePackage, type);
-    download(package, function(err, result){
+    download([package], function(err, result){
       if (err) return callback(err);
     });
   }

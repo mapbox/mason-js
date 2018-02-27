@@ -11,7 +11,7 @@ var headerPackage = {
   name: 'protozero',
   version: '1.5.1',
   headers: true,
-  os: null,
+  os: '',
   awsPath: 'headers/protozero/1.5.1.tar.gz',
   src: 'https://s3.amazonaws.com/mason-binaries/headers/protozero/1.5.1.tar.gz',
   dst: appDir + '/mason_packages/headers/protozero/1.5.1'
@@ -30,7 +30,7 @@ if (platform === 'darwin') {
 var compiledPackage = {
   name: 'ccache',
   version: '3.6.4',
-  headers: null,
+  headers: false,
   os: `${system}`,
   awsPath: `${system}/ccache/3.6.4.tar.gz`,
   src: `https://s3.amazonaws.com/mason-binaries/${system}/ccache/3.6.4.tar.gz`,
@@ -64,12 +64,6 @@ test('ini file does not exist', function(assert) {
     assert.equal(err.message, msg);
     assert.end();
   });
-});
-
-test('build params returns correct package object with cli args', function(assert) {
-  var package = reader.buildParams('protozero=1.5.1');
-  assert.deepEqual(package[0], headerPackage);
-  assert.end();
 });
 
 test('[mason-js] missing args', (assert) => {
