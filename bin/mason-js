@@ -12,17 +12,23 @@ var args = require('minimist')(process.argv.slice(2));
 var masonPath = path.join(process.cwd(), '/mason-versions.ini');
 
 if (require.main === module) {
-  var install = args['_'][0]; 
+  var command = args['_'][0]; 
   var singlePackage = args['_'][1];
   var type = args.type; 
 
-  if (!install) {
+  if (!command) {
     console.error('missing mason-js args');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
   }
 
-  if (install === 'install' && !singlePackage){
+  if (command === 'link' && !singlePackage){
+    download.link(masonPath, function(err, result){
+      if (err) return callback(err);
+    });
+  }
+
+  if (command === 'install' && !singlePackage){
     reader.fileReader(masonPath, function(err, packages){
       download(packages, function(err, result){
         if (err) return callback(err);
@@ -38,7 +44,7 @@ if (require.main === module) {
     process.exit(1);
   }
   
-  if (install === 'install' && singlePackage && args.type){
+  if (command === 'install' && singlePackage && args.type){
     var params = generatePackageObject(singlePackage);
     var package = reader.buildParams(singlePackage, type);
     download([package], function(err, result){
