@@ -92,7 +92,7 @@ test('[mason-js] missing args', (assert) => {
   exec(command_path, (err, stdout, stderr) => {
     assert.ok(err);
     assert.equal(stdout, helpText, 'no stdout');
-    assert.equal(stderr, 'missing mason-js args\n', 'expected args');
+    assert.equal(stderr, 'ERR! missing mason-js args \n', 'expected args');
     assert.end();
   });
 });
@@ -101,7 +101,7 @@ test('[mason-js] missing package type', (assert) => {
   exec(command_path + ' install protozero=1.5.1', (err, stdout, stderr) => {
     assert.ok(err);
     assert.equal(stdout, helpText, 'no stdout');
-    assert.equal(stderr, 'include package type with package info: example protozero=1.5.1 --type=header\n', 'expected args');
+    assert.equal(stderr, 'ERR! include package type with package info: example protozero=1.5.1 --type=header \n', 'expected args');
     assert.end();
   });
 });

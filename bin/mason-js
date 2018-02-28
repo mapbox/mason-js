@@ -22,7 +22,7 @@ if (require.main === module) {
     process.exit(1);
   }
 
-  if (command !== 'link' || command !== 'install'){
+  if (command !== 'link' && command !== 'install'){
     log.error('invalid command');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
@@ -46,7 +46,7 @@ if (require.main === module) {
 
   // add more validation here
   if (singlePackage && !args.type) {
-    ;og.error('include package type with package info: example protozero=1.5.1 --type=header');
+    log.error('include package type with package info: example protozero=1.5.1 --type=header');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
   }
