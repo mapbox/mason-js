@@ -44,7 +44,6 @@ if (require.main === module) {
     });
   }
 
-  // add more validation here
   if (singlePackage && !args.type) {
     log.error('include package type with package info: example protozero=1.5.1 --type=header');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
@@ -52,8 +51,13 @@ if (require.main === module) {
   }
   
   if (command === 'install' && singlePackage && args.type){
-    var params = generatePackageObject(singlePackage);
-    var package = reader.buildParams(singlePackage, type);
+    if (args.type !== 'header' && args.type !=='compiled'){
+      log.error('invalid package type');
+      process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
+      process.exit(1);
+    }
+    var params = reader.generatePackageObject(singlePackage);
+    var package = reader.buildParams(params, type);
     index.install([package], function(err){
       if (err) throw err;
       log.info('Finished downloading packages');

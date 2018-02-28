@@ -31,7 +31,6 @@ function install(packageList, callback) {
   var q = d3.queue(1);
 
   libraries.forEach(function(options, i) {
-    options.update_binary = null;
     if (options) {
       loader.checkLibraryExists(options, function(err, exists) {
         if (!exists) {
