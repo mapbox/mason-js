@@ -19,9 +19,9 @@ function link(masonPath, callback){
   reader.fileReader(masonPath, function(err, packages){
     if (err) return callback(err);
     var paths = sym.buildLinkPaths(packages,path.join(process.cwd(), '/mason_packages/.link'));
-    console.log('paths!!', paths);
-    sym.symLink(paths, function(err){
+    sym.symLink(paths, function(err, result){
       if (err) return callback(err);
+      return callback(result);
     });
   });
 }  

@@ -7,13 +7,11 @@ var stream = require('stream');
 var log = require('npmlog');
 var fse = require('fs-extra');
 var index = require('../');
-// var sym = require('../lib/symlink');
+var sym = require('../lib/symlink');
 var rimraf = require('rimraf');
-// var reader = require('../lib/file_reader.js');
 
 test('setup', (assert) => {
   if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
-  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
   assert.end();
 });
 
@@ -61,36 +59,80 @@ test('[install] installs a package', function(assert) {
   });
 });
 
-// test('[symlink] links file', function(assert) {
-//   var appDir = process.cwd();
-//   var symlinkPath = path.join(appDir, 'test/fixtures/out/mason_packages/.link');
+test('[symlink] links files', function(assert) {
+  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
+
+  var appDir = process.cwd();
+  var symlinkPath = path.join(appDir, 'test/fixtures/out/mason_packages/.link');
   
-//   var paths = [
-//     [appDir + '/test/fixtures/headers/protozero/1.5.1',
-//       symlinkPath
-//     ],
-//     [appDir + '/test/fixtures/osx-x86_64/cairo/1.14.8',
-//       symlinkPath
-//     ]
-//   ];
+  var paths = [
+    [appDir + '/test/fixtures/headers/protozero/1.5.1',
+      symlinkPath
+    ],
+    [appDir + '/test/fixtures/osx-x86_64/cairo/1.14.8',
+      symlinkPath
+    ]
+  ];
   
-//   sinon.spy(log, 'info');
+  sinon.spy(log, 'info');
 
-//   sinon.stub(sym, 'buildLinkPaths').returns(paths);
+  sinon.stub(sym, 'buildLinkPaths').returns(paths);
 
-//   var proto = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'protozero', 'byteswap.hpp');
-//   var cairo = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'cairo', 'cairo-ft.h');
+  var proto = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'protozero', 'byteswap.hpp');
+  var cairo = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'cairo', 'cairo-ft.h');
+  var masonPath = './test/fixtures/mason-versions.ini';
 
-//   index.link('path', function(err, result) {
-//     assert.equal(fs.existsSync(proto), true);
-//     assert.equal(fs.existsSync(cairo), true);
-//     assert.equal(log.info.getCall(0).args[0], 'Symlinked: ');
-//     fse.remove(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'), err => {
-//       if (err) return console.error(err);
-//     });
-//     assert.end();
-//   });
-// });
+  index.link(masonPath, function() {
+    assert.equal(fs.existsSync(proto), true);
+    assert.equal(fs.existsSync(cairo), true);
+    assert.equal(log.info.getCall(0).args[0], 'Symlinked: ');
+    fse.remove(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'), err => {
+      if (err) return console.error(err);
+    });
+    sym.buildLinkPaths.restore();
+    log.info.restore();
+    assert.end();
+  });
+});
+
+test('cleanup', (assert) => {
+  rimraf(__dirname + '/fixtures/out', (err) => {
+    assert.ifError(err);
+    assert.end();
+  });
+});
+
+test('[symlink] file to link doesnt exist', function(assert) {
+  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
+
+  var appDir = process.cwd();
+  var symlinkPath = path.join(appDir, 'test/fixtures/out/mason_packages/.link');
+  
+  var paths = [
+    [appDir + '/test/fixtures/headers/protozro/1.5.1',
+      symlinkPath
+    ],
+    [appDir + '/test/fixtures/osx-x86_64/ciro/1.14.8',
+      symlinkPath
+    ]
+  ];
+  
+  sinon.spy(log, 'info');
+
+  sinon.stub(sym, 'buildLinkPaths').returns(paths);
+
+  var masonPath = './test/fixtures/mason-versions.ini';
+
+  index.link(masonPath, function(err) {
+    assert.equal(/ENOENT: no such file or directory/.test(err.message), true);
+    fse.remove(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'), err => {
+      if (err) return console.error(err);
+    });
+    sym.buildLinkPaths.restore();
+    log.info.restore();
+    assert.end();
+  });
+});
 
 test('cleanup', (assert) => {
   rimraf(__dirname + '/fixtures/out', (err) => {
