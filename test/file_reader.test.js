@@ -41,6 +41,7 @@ test('reads ini file correctly', function(assert) {
   var masonPath = './test/fixtures/mason-versions.ini';
 
   reader.fileReader(masonPath, function(err, result) {
+    console.log(result);
     assert.equal(result.length, 3);
     assert.deepEqual(result[0], headerPackage);
     assert.deepEqual(result[2], compiledPackage);

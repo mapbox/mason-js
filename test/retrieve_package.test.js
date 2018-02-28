@@ -58,8 +58,6 @@ test('[place binary] places binary', function(assert) {
     request.get.restore();
     assert.end();
   });
-
-
 });
 
 test('[place binary] gets a request error', function(assert) {
@@ -204,6 +202,95 @@ test('[check library] creates directory paths', function(assert) {
     assert.end();
   });
 });
+
+test.only('[install] installs a package', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'protozero1.5.1.tar.gz');
+  var dst = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1');
+  var outfile = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1', 'include', 'protozero', 'byteswap.hpp');
+  var url = 'http://fakeurl.com';
+
+  var packageList = [{
+    name: 'protozero',
+    version: '1.5.1',
+    headers: true,
+    os: null,
+    awsPath: 'headers/protozero/1.5.1.tar.gz',
+    src: url,
+    dst: dst
+  }];
+
+  var buffer = fs.readFileSync(src);
+
+  var mockStream = new stream.PassThrough();
+  mockStream.push(buffer);
+  mockStream.end();
+
+  sinon.spy(mockStream, 'pipe');
+  sinon.spy(log, 'info');
+
+  sinon.stub(request, 'get').returns(mockStream);
+
+  retriever.install(packageList, function() {
+    sinon.assert.calledOnce(mockStream.pipe);
+    sinon.assert.calledTwice(log.info);
+    assert.equal(log.info.getCall(0).args[0], 'check');
+    assert.equal(log.info.getCall(0).args[1], 'checked for protozero (not found locally)');
+    assert.equal(log.info.getCall(1).args[0], 'tarball');
+    assert.equal(log.info.getCall(1).args[1], 'done parsing tarball for protozero');
+    assert.equal(fs.existsSync(outfile), true);
+    fse.remove(path.join(__dirname + '/fixtures/out', 'protozero'), err => {
+      if (err) return console.error(err);
+    });
+    log.info.restore();
+    request.get.restore();
+    assert.end();
+  });
+});
+
+
+// test('[install] installs a package', function(assert) {
+//   if (!fs.existsSync(__dirname + '/fixtures/out/boost/1.3.0')) fse.mkdirpSync(__dirname + '/fixtures/out/boost/1.3.0');
+
+//   var src = path.join(__dirname + '/fixtures/', 'protozero1.5.1.tar.gz');
+//   var dst = path.join(__dirname + '/fixtures/out', 'boost/1.3.0');
+//   var outfile = path.join(__dirname + '/fixtures/out', 'boost/1.3.0', 'include', 'protozero', 'byteswap.hpp');
+//   var url = 'http://fakeurl.com';
+
+//   var options = {
+//     name: 'boost',
+//     version: '1.3.0',
+//     headers: true,
+//     os: null,
+//     awsPath: 'headers/protozero/1.3.0.tar.gz',
+//     src: url,
+//     dst: dst
+//   };
+
+//   var buffer = fs.readFileSync(src);
+
+//   var mockStream = new stream.PassThrough();
+//   mockStream.push(buffer);
+//   mockStream.end();
+
+//   sinon.spy(mockStream, 'pipe');
+//   sinon.spy(log, 'info');
+
+//   sinon.stub(request, 'get').returns(mockStream);
+
+//   retriever.place_binary(options, function() {
+//     sinon.assert.calledOnce(mockStream.pipe);
+//     sinon.assert.calledOnce(log.info);
+//     assert.equal(log.info.getCall(0).args[0], 'tarball');
+//     assert.equal(log.info.getCall(0).args[1], 'done parsing tarball for protozero');
+//     assert.equal(fs.existsSync(outfile), true);
+//     fse.remove(path.join(__dirname + '/fixtures/out', 'boost'), err => {
+//       if (err) return console.error(err);
+//     });
+//     log.info.restore();
+//     request.get.restore();
+//     assert.end();
+//   });
+// });
 
 test('cleanup', (assert) => {
   rimraf(__dirname + '/fixtures/out', (err) => {
