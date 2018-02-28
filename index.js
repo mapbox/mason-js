@@ -5,6 +5,7 @@ var path = require('path');
 var reader = require('./lib/file_reader.js');
 var fse = require('fs-extra');
 var fs = require('fs');
+var d3 = require('d3-queue');
 
 /* eslint-disable */
 
@@ -24,7 +25,30 @@ function link(masonPath, callback){
   });
 }  
 
+function install(packageList, callback) {
+  var libraries = packageList;
+  var q = d3.queue(1);
+
+  libraries.forEach(function(options, i) {
+    options.update_binary = null;
+    if (options) {
+      loader.checkLibraryExists(options, function(err, exists) {
+        if (!exists) {
+          log.info('check', 'checked for ' + options.name + ' (not found locally)');
+          q.defer(loader.place_binary, options);
+          if (libraries.length - 1 === i) {
+            q.awaitAll(function(err) {
+              if (err) return callback(err);
+              return callback(null);
+            });
+          }
+        }
+      });
+    }
+  });
+}
 
 
-module.exports = {download:download, 
+
+module.exports = {install:install, 
   link:link};

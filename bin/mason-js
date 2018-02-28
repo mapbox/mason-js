@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var loader = require('../lib/retrieve_package.js');
 var reader = require('../lib/file_reader.js');
-var download = require('../');
+var index = require('../');
 var sym = require('../lib/symlink.js');
 var log = require('npmlog');
 var fse = require('fs-extra');
@@ -23,7 +23,7 @@ if (require.main === module) {
   }
 
   if (command === 'link'){
-    download.link(masonPath, function(err, result){
+    index.link(masonPath, function(err, result){
       if (err) return callback(err);
     });
   }
@@ -31,7 +31,7 @@ if (require.main === module) {
   if (command === 'install' && !singlePackage){
     reader.fileReader(masonPath, function(err, packages){
       log.info('Mason Package Install Starting');
-      loader.install(packages, function(err){
+      index.install(packages, function(err){
         if (err) throw err;
         log.info('Finished downloading packages')
       });
@@ -48,9 +48,9 @@ if (require.main === module) {
   if (command === 'install' && singlePackage && args.type){
     var params = generatePackageObject(singlePackage);
     var package = reader.buildParams(singlePackage, type);
-    loader.install([package], function(err){
+    index.install([package], function(err){
       if (err) throw err;
-      log.info('Finished downloading packages')
+      log.info('Finished downloading packages');
     });
   }
 }

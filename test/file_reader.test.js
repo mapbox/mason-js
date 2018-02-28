@@ -54,7 +54,7 @@ test('[package object] generates package object correctly', function(assert) {
   var expected = {
     name: 'protozero', 
     version: '1.5.1'
-  }
+  };
 
   var object = reader.generatePackageObject(p);
   assert.deepEqual(object, expected);
@@ -64,7 +64,9 @@ test('[package object] generates package object correctly', function(assert) {
 test('[package object] invalid package', function(assert) {
   var p = 'protozero1.5.1';
 
-  assert.throws(function(){reader.generatePackageObject(p)}, /Invalid package syntax/, "Should throw syntax error");
+  assert.throws(function(){
+    reader.generatePackageObject(p);
+  }, /Invalid package syntax/, 'Should throw syntax error');
   assert.end();
 });
 

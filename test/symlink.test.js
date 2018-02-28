@@ -99,8 +99,6 @@ test('[symlink] fails to create symlink - directory not found', function(assert)
 });
 
 test('[symlink] doesnt symlink mason.ini files', function(assert) {
-  var symlinkPath = path.join(global.appRoot, 'test/fixtures/out/mason_packages/.link');
-
   var src = '/test/fixtures/headers/protozro/1.5.1/mason.ini'; 
   var dest = 'symlink/path'; 
 
