@@ -2,19 +2,37 @@ var log = require('npmlog');
 var loader = require('./lib/retrieve_package.js');
 var sym = require('./lib/symlink.js');
 var path = require('path');
+var reader = require('./lib/file_reader.js');
+var fse = require('fs-extra');
+var fs = require('fs');
+
+/* eslint-disable */
 
 function download(packages, callback){
   log.info('Mason Package Install Starting');
-  loader.install(packages, function(err, packageLists){
+  loader.install(packages, function(err){
     if (err) throw err;
+  });
+}
 
-    log.info('Creating Symlinks');
+function link(masonPath, callback){
+// linting is disabled because it errors on callback param
 
-    var paths = sym.buildLinkPaths(packageLists,path.join(process.cwd(), '/mason_packages/.link'));
+/* eslint-disable */
+
+  if (fs.existsSync(path.join(process.cwd(), '/mason_packages/.link'))) {
+    fse.removeSync(path.join(process.cwd(), '/mason_packages/.link'));
+  }
+  reader.fileReader(masonPath, function(err, packages){
+    if (err) return callback(err);
+    var paths = sym.buildLinkPaths(packages,path.join(process.cwd(), '/mason_packages/.link'));
     sym.symLink(paths, function(err){
       if (err) return callback(err);
     });
   });
-}
+}  
 
-module.exports = download;
+
+
+module.exports = {download:download, 
+  link:link};
