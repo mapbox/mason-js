@@ -49,6 +49,26 @@ test('reads ini file correctly', function(assert) {
   });
 });
 
+test('[package object] generates package object correctly', function(assert) {
+  var p = 'protozero=1.5.1';
+  var expected = {
+    name: 'protozero', 
+    version: '1.5.1'
+  }
+
+  var object = reader.generatePackageObject(p);
+  assert.deepEqual(object, expected);
+  assert.end();
+});
+
+test('[package object] invalid package', function(assert) {
+  var p = 'protozero1.5.1';
+
+  assert.throws(function(){reader.generatePackageObject(p)}, /Invalid package syntax/, "Should throw syntax error");
+  assert.end();
+});
+
+
 test('read incorrect ini file', function(assert) {
   var masonPath = './test/fixtures/wrong-order.ini';
 

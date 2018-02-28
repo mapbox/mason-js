@@ -5,6 +5,8 @@ var path = require('path');
 var rimraf = require('rimraf');
 var fse = require('fs-extra');
 var appDir = process.cwd();
+var sinon = require('sinon');
+var log = require('npmlog');
 
 global.appRoot = process.cwd();
 
@@ -67,10 +69,13 @@ test('[symlink] creates symlink', function(assert) {
   var proto = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'protozero', 'byteswap.hpp');
   var cairo = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'cairo', 'cairo-ft.h');
 
+  sinon.spy(log, 'info');
+
   link.symLink(paths, function(err, result) {
     assert.equal(result, true);
     assert.equal(fs.existsSync(proto), true);
     assert.equal(fs.existsSync(cairo), true);
+    assert.equal(log.info.getCall(0).args[0], 'Symlinked: ');
     assert.end();
   });
 });
@@ -91,6 +96,18 @@ test('[symlink] fails to create symlink - directory not found', function(assert)
     assert.equal(/ENOENT: no such file or directory/.test(err.message), true);
     assert.end();
   });
+});
+
+test('[symlink] doesnt symlink mason.ini files', function(assert) {
+  var symlinkPath = path.join(global.appRoot, 'test/fixtures/out/mason_packages/.link');
+
+  var src = '/test/fixtures/headers/protozro/1.5.1/mason.ini'; 
+  var dest = 'symlink/path'; 
+
+  var filter = link.filterFunc(src, dest);
+
+  assert.equal(filter, false);
+  assert.end();
 });
 
 test('cleanup', (assert) => {

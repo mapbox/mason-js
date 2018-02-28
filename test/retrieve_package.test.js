@@ -203,7 +203,7 @@ test('[check library] creates directory paths', function(assert) {
   });
 });
 
-test.only('[install] installs a package', function(assert) {
+test('[install] installs a package', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'protozero1.5.1.tar.gz');
   var dst = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1');
   var outfile = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1', 'include', 'protozero', 'byteswap.hpp');
