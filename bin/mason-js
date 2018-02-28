@@ -17,7 +17,13 @@ if (require.main === module) {
   var type = args.type; 
 
   if (!command) {
-    console.error('missing mason-js args');
+    log.error('missing mason-js args');
+    process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
+    process.exit(1);
+  }
+
+  if (command !== 'link' || command !== 'install'){
+    log.error('invalid command');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
   }
@@ -40,7 +46,7 @@ if (require.main === module) {
 
   // add more validation here
   if (singlePackage && !args.type) {
-    console.error('include package type with package info: example protozero=1.5.1 --type=header');
+    ;og.error('include package type with package info: example protozero=1.5.1 --type=header');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
   }
