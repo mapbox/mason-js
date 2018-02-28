@@ -61,6 +61,16 @@ if (require.main === module) {
     index.install([package], function(err){
       if (err) throw err;
       log.info('Finished downloading packages');
+      console.log('args', args.save)
+      if (args.save){
+        console.log('start saving!!');
+        // fs.open(masonPath, 'a', 0666, function(err, fd) {
+        //   console.log(line);
+        //   fs.writeSync(fd, line + '\n', null, undefined, function(err, written) {
+        //      writeLineFromArray(lines);
+        //   });
+        // }); 
+      }
     });
   }
 }
