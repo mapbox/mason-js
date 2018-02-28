@@ -8,7 +8,6 @@ var fs = require('fs');
 
 /* eslint-disable */
 
-
 function download(packages, callback){
   log.info('Mason Package Install Starting');
   loader.install(packages, function(err){
@@ -17,6 +16,10 @@ function download(packages, callback){
 }
 
 function link(masonPath, callback){
+// linting is disabled because it errors on callback param
+
+/* eslint-disable */
+
   if (fs.existsSync(path.join(process.cwd(), '/mason_packages/.link'))) {
     fse.removeSync(path.join(process.cwd(), '/mason_packages/.link'));
   }
@@ -29,7 +32,6 @@ function link(masonPath, callback){
   });
 }  
 
-/* eslint-disable */
 
 
 module.exports = {download:download, 
