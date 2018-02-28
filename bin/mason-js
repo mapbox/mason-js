@@ -33,7 +33,7 @@ if (require.main === module) {
       log.info('Mason Package Install Starting');
       index.install(packages, function(err){
         if (err) throw err;
-        log.info('Finished downloading packages')
+        log.info('Finished downloading packages'); 
       });
     });
   }

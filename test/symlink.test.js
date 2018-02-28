@@ -13,7 +13,6 @@ global.appRoot = process.cwd();
 test('setup', (assert) => {
 
   if (fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.removeSync(__dirname + '/fixtures/out/mason_packages/.link');
-
   fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
   assert.end();
 });
