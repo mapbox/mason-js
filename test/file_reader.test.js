@@ -6,6 +6,8 @@ var reader = require('../lib/file_reader.js');
 var exec = require('child_process').exec;
 var appDir = process.cwd();
 var helpText = 'Usage:\n  mason-js install \n\n  or \n\n  mason-js install <package> <package type>\n\nDescription:\n  mason-js is a JS client for mason that installs c++ packages locally (both header-only and compiled). mason-js can install all packages declared in a mason-versions.ini file or it can install a single package. \n\nExample:\n  mason-js install  \n\n  OR\n\n  mason-js install protozero=1.5.1 --type=header \n\nOptions:\n  --type [header or compiled]\n';
+var rimraf = require('rimraf');
+var fs = require('fs');
 
 var headerPackage = {
   name: 'protozero',
@@ -105,3 +107,45 @@ test('[mason-js] missing package type', (assert) => {
     assert.end();
   });
 });
+
+test('[add package to file] adds package to mason-versions.ini', function(assert) {
+  if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
+
+  var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
+  var dst = path.join(__dirname + '/fixtures/out', 'mason-versions.ini');
+  fs.createReadStream(src).pipe(fs.createWriteStream(dst));
+  var split = require('split');
+
+  var package = 'crazynewpackage=1.5.1';
+  var type = 'header';
+  var through = require('through');
+
+  var fs = require('fs')
+
+  fs.readFile(dst, 'utf8', function (err,data) {
+    if (err) {
+      return console.log(err);
+    }
+
+    var result = data.replace(`/${type}/`g, 'replacement');
+
+    fs.writeFile(someFile, result, 'utf8', function (err) {
+       if (err) return console.log(err);
+    });
+  });
+
+  assert.end();
+  // reader.addPackageToIniFile(dst,package, type, function(err, res) {
+  //   // assert.equal(res, false);
+  //   // assert.equal(fs.existsSync(__dirname + '/fixtures/out/boost/1.3.0'), true);
+  //   console.log(err, res);
+  //   assert.end();
+  // });
+});
+
+// test('cleanup', (assert) => {
+//   rimraf(__dirname + '/fixtures/out', (err) => {
+//     assert.ifError(err);
+//     assert.end();
+//   });
+// });
