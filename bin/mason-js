@@ -11,7 +11,7 @@ var args = require('minimist')(process.argv.slice(2));
 
 var masonPath = path.join(process.cwd(), '/mason-versions.ini');
 
-if (require.main === module) {
+function run(args, callback){
   var command = args['_'][0]; 
   var singlePackage = args['_'][1];
   var type = args.type; 
@@ -61,18 +61,18 @@ if (require.main === module) {
     index.install([package], function(err){
       if (err) throw err;
       log.info('Finished downloading packages');
-      console.log('args', args.save)
       if (args.save){
-        console.log('start saving!!');
-        // fs.open(masonPath, 'a', 0666, function(err, fd) {
-        //   console.log(line);
-        //   fs.writeSync(fd, line + '\n', null, undefined, function(err, written) {
-        //      writeLineFromArray(lines);
-        //   });
-        // }); 
+
       }
     });
   }
+
+}
+
+if (require.main === module) {
+  run(args, function(err, result){
+    if (err) return callback(err);
+  });
 }
 
 
