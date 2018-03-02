@@ -62,7 +62,12 @@ function run(args, callback){
       if (err) throw err;
       log.info('Finished downloading packages');
       if (args.save){
-
+        reader.fileWriter(masonPath, package, type, function(err, result){
+          if (err) return callback(err);
+          if (!result){
+            log.warn('File could not be saved, already exists in mason-versions.ini.');
+          }
+        });
       }
     });
   }

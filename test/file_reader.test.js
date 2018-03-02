@@ -123,7 +123,6 @@ test('[add package to file] adds header package to mason-versions.ini', function
   var expected = '[headers]\ncrazynewpackage=1.5.1\nprotozero=1.5.1\nsparsepp=0.9.5\n[compiled]\nccache=3.6.4';
 
   reader.fileWriter(dst,package, type, function(err, res) {
-    console.log("RES", res);
     assert.equal(res, true);
     var data = fs.readFileSync(dst, 'utf8');
     assert.equal(data, expected);
