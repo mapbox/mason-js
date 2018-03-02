@@ -64,9 +64,6 @@ function run(args, callback){
       if (args.save){
         reader.fileWriter(masonPath, package, type, function(err, result){
           if (err) return callback(err);
-          if (!result){
-            log.warn('File could not be saved, already exists in mason-versions.ini.');
-          }
         });
       }
     });

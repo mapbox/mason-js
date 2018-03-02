@@ -149,14 +149,14 @@ test('[add package to file] adds compiled package to mason-versions.ini', functi
   });
 });
 
-test.only('[add package to file] does not write package already in file', function(assert) {
+test('[add package to file] does not write package already in file', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
 
   var package = 'protozero=1.5.1';
   var type = 'headers';
 
-  reader.fileWriter(src,package, type, function(err, res) {
-    assert.equal(res, false);
+  reader.fileWriter(src,package, type, function(err) {
+    assert.equal(err.message, 'File could not be saved, already exists in mason-versions.ini.');
     assert.end();
   });
 });
