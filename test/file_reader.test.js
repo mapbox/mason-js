@@ -6,6 +6,13 @@ var reader = require('../lib/file_reader.js');
 var exec = require('child_process').exec;
 var appDir = process.cwd();
 var helpText = 'Usage:\n  mason-js install \n\n  or \n\n  mason-js install <package> <package type>\n\nDescription:\n  mason-js is a JS client for mason that installs c++ packages locally (both header-only and compiled). mason-js can install all packages declared in a mason-versions.ini file or it can install a single package. \n\nExample:\n  mason-js install  \n\n  OR\n\n  mason-js install protozero=1.5.1 --type=header \n\nOptions:\n  --type [header or compiled]\n';
+var rimraf = require('rimraf');
+var fs = require('fs');
+
+test('setup', (assert) => {
+  if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
+  assert.end();
+});
 
 var headerPackage = {
   name: 'protozero',
@@ -102,6 +109,61 @@ test('[mason-js] missing package type', (assert) => {
     assert.ok(err);
     assert.equal(stdout, helpText, 'no stdout');
     assert.equal(stderr, 'ERR! include package type with package info: example protozero=1.5.1 --type=header \n', 'expected args');
+    assert.end();
+  });
+});
+
+test('[add package to file] adds header package to mason-versions.ini', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
+  var dst = path.join(__dirname + '/fixtures/out', 'mason-versions.ini');
+  fs.createReadStream(src).pipe(fs.createWriteStream(dst));
+
+  var package = 'crazynewpackage=1.5.1';
+  var type = 'header';
+  var expected = '[headers]\ncrazynewpackage=1.5.1\nprotozero=1.5.1\nsparsepp=0.9.5\n[compiled]\nccache=3.6.4';
+
+  reader.fileWriter(dst,package, type, function(err, res) {
+    assert.equal(res, true);
+    var data = fs.readFileSync(dst, 'utf8');
+    assert.equal(data, expected);
+    assert.equal(/crazynewpackage=1.5.1/.test(data), true);
+    assert.end();
+  });
+});
+
+test('[add package to file] adds compiled package to mason-versions.ini', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
+  var dst = path.join(__dirname + '/fixtures/out', 'mason-versions.ini');
+  fs.createReadStream(src).pipe(fs.createWriteStream(dst));
+
+  var package = 'crazynewpackage=1.5.1';
+  var type = 'compiled';
+  var expected = '[headers]\nprotozero=1.5.1\nsparsepp=0.9.5\n[compiled]\ncrazynewpackage=1.5.1\nccache=3.6.4';
+
+  reader.fileWriter(dst,package, type, function(err, res) {
+    assert.equal(res, true);
+    var data = fs.readFileSync(dst, 'utf8');
+    assert.equal(data, expected);
+    assert.equal(/crazynewpackage=1.5.1/.test(data), true);
+    assert.end();
+  });
+});
+
+test('[add package to file] does not write package already in file', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
+
+  var package = 'protozero=1.5.1';
+  var type = 'headers';
+
+  reader.fileWriter(src,package, type, function(err) {
+    assert.equal(err.message, 'File could not be saved, already exists in mason-versions.ini.');
+    assert.end();
+  });
+});
+
+test('cleanup', (assert) => {
+  rimraf(__dirname + '/fixtures/out', (err) => {
+    assert.ifError(err);
     assert.end();
   });
 });

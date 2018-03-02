@@ -11,7 +11,7 @@ var args = require('minimist')(process.argv.slice(2));
 
 var masonPath = path.join(process.cwd(), '/mason-versions.ini');
 
-if (require.main === module) {
+function run(args, callback){
   var command = args['_'][0]; 
   var singlePackage = args['_'][1];
   var type = args.type; 
@@ -44,7 +44,6 @@ if (require.main === module) {
     });
   }
 
-  // add more validation here
   if (singlePackage && !args.type) {
     log.error('include package type with package info: example protozero=1.5.1 --type=header');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
@@ -52,13 +51,31 @@ if (require.main === module) {
   }
   
   if (command === 'install' && singlePackage && args.type){
+    if (args.type !== 'header' && args.type !=='compiled'){
+      log.error('invalid package type');
+      process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
+      process.exit(1);
+    }
+
     var params = reader.generatePackageObject(singlePackage);
     var package = reader.buildParams(params, type);
     index.install([package], function(err){
       if (err) throw err;
       log.info('Finished downloading packages');
+      if (args.save){
+        reader.fileWriter(masonPath, package, type, function(err, result){
+          if (err) return callback(err);
+        });
+      }
     });
   }
+
+}
+
+if (require.main === module) {
+  run(args, function(err, result){
+    if (err) return callback(err);
+  });
 }
 
 
