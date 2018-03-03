@@ -10,7 +10,7 @@ var log = require('npmlog');
 
 global.appRoot = process.cwd();
 
-test('setup', (assert) => {
+test('setup', function(assert) {
 
   if (fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.removeSync(__dirname + '/fixtures/out/mason_packages/.link');
   fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
@@ -108,7 +108,7 @@ test('[symlink] doesnt symlink mason.ini files', function(assert) {
 });
 
 test('cleanup', (assert) => {
-  rimraf(__dirname + '/fixtures/out', (err) => {
+  rimraf(__dirname + '/fixtures/out', function(err) {
     assert.ifError(err);
     assert.end();
   });

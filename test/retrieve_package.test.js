@@ -11,7 +11,7 @@ var fse = require('fs-extra');
 
 global.appRoot = process.cwd();
 
-test('setup', (assert) => {
+test('setup', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
   assert.end();
 });
@@ -196,7 +196,7 @@ test('[check library] creates directory paths', function(assert) {
   retriever.checkLibraryExists(options, function(err, res) {
     assert.equal(res, false);
     assert.equal(fs.existsSync(__dirname + '/fixtures/out/boost/1.3.0'), true);
-    fse.remove(path.join(__dirname + '/fixtures/out', 'boost'), err => {
+    fse.remove(path.join(__dirname + '/fixtures/out', 'boost'), function(err) {
       if (err) return console.error(err);
     });
     assert.end();
@@ -204,7 +204,7 @@ test('[check library] creates directory paths', function(assert) {
 });
 
 test('cleanup', (assert) => {
-  rimraf(__dirname + '/fixtures/out', (err) => {
+  rimraf(__dirname + '/fixtures/out', function(err) {
     assert.ifError(err);
     assert.end();
   });

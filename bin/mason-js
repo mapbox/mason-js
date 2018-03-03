@@ -44,7 +44,7 @@ function run(args, callback){
     });
   }
 
-  if (singlePackage && !args.type) {
+  if (command === 'install' && singlePackage && !args.type) {
     log.error('include package type with package info: example protozero=1.5.1 --type=header');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
@@ -65,6 +65,9 @@ function run(args, callback){
       if (args.save){
         reader.fileWriter(masonPath, package, type, function(err, result){
           if (err) return callback(err);
+          if (result){
+            log.info(`${package} added to mason-versions.ini`);
+          }
         });
       }
     });

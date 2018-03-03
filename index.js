@@ -50,5 +50,6 @@ function install(packageList, callback) {
 
 
 
-module.exports = {install:install, 
+module.exports = {
+  install:install, 
   link:link};

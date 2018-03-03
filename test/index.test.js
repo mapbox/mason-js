@@ -10,7 +10,7 @@ var index = require('../');
 var sym = require('../lib/symlink');
 var rimraf = require('rimraf');
 
-test('setup', (assert) => {
+test('setup', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
   assert.end();
 });
@@ -50,9 +50,7 @@ test('[install] installs a package', function(assert) {
     assert.equal(log.info.getCall(1).args[0], 'tarball');
     assert.equal(log.info.getCall(1).args[1], 'done parsing tarball for protozero');
     assert.equal(fs.existsSync(outfile), true);
-    fse.remove(path.join(__dirname + '/fixtures/out', 'protozero'), err => {
-      if (err) return console.error(err);
-    });
+    fse.removeSync(path.join(__dirname + '/fixtures/out', 'protozero'));
     log.info.restore();
     request.get.restore();
     assert.end();
@@ -86,17 +84,15 @@ test('[symlink] links files', function(assert) {
     assert.equal(fs.existsSync(proto), true);
     assert.equal(fs.existsSync(cairo), true);
     assert.equal(log.info.getCall(0).args[0], 'Symlinked: ');
-    fse.remove(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'), err => {
-      if (err) return console.error(err);
-    });
+    fse.removeSync(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'));
     sym.buildLinkPaths.restore();
     log.info.restore();
     assert.end();
   });
 });
 
-test('cleanup', (assert) => {
-  rimraf(__dirname + '/fixtures/out', (err) => {
+test('cleanup', function(assert) {
+  rimraf(__dirname + '/fixtures/out', function(err) {
     assert.ifError(err);
     assert.end();
   });
@@ -125,7 +121,7 @@ test('[symlink] file to link doesnt exist', function(assert) {
 
   index.link(masonPath, function(err) {
     assert.equal(/ENOENT: no such file or directory/.test(err.message), true);
-    fse.remove(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'), err => {
+    fse.remove(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'), function(err) {
       if (err) return console.error(err);
     });
     sym.buildLinkPaths.restore();
@@ -134,8 +130,8 @@ test('[symlink] file to link doesnt exist', function(assert) {
   });
 });
 
-test('cleanup', (assert) => {
-  rimraf(__dirname + '/fixtures/out', (err) => {
+test('cleanup', function(assert) {
+  rimraf(__dirname + '/fixtures/out', function(err) {
     assert.ifError(err);
     assert.end();
   });

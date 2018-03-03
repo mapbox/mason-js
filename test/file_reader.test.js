@@ -9,7 +9,7 @@ var helpText = 'Usage:\n  mason-js install \n\n  or \n\n  mason-js install <pack
 var rimraf = require('rimraf');
 var fs = require('fs');
 
-test('setup', (assert) => {
+test('setup', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
   assert.end();
 });
@@ -95,8 +95,8 @@ test('ini file does not exist', function(assert) {
   });
 });
 
-test('[mason-js] missing args', (assert) => {
-  exec(command_path, (err, stdout, stderr) => {
+test('[mason-js] missing args', function(assert) {
+  exec(command_path, function(err, stdout, stderr) {
     assert.ok(err);
     assert.equal(stdout, helpText, 'no stdout');
     assert.equal(stderr, 'ERR! missing mason-js args \n', 'expected args');
@@ -104,7 +104,7 @@ test('[mason-js] missing args', (assert) => {
   });
 });
 
-test('[mason-js] missing package type', (assert) => {
+test('[mason-js] missing package type', function(assert) {
   exec(command_path + ' install protozero=1.5.1', (err, stdout, stderr) => {
     assert.ok(err);
     assert.equal(stdout, helpText, 'no stdout');
@@ -161,7 +161,7 @@ test('[add package to file] does not write package already in file', function(as
   });
 });
 
-test('cleanup', (assert) => {
+test('cleanup', function(assert) {
   rimraf(__dirname + '/fixtures/out', (err) => {
     assert.ifError(err);
     assert.end();
