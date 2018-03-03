@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var loader = require('../lib/retrieve_package.js');
 var reader = require('../lib/file_reader.js');
-var download = require('../');
+var index = require('../');
 var sym = require('../lib/symlink.js');
 var log = require('npmlog');
 var fse = require('fs-extra');
@@ -11,54 +11,71 @@ var args = require('minimist')(process.argv.slice(2));
 
 var masonPath = path.join(process.cwd(), '/mason-versions.ini');
 
-if (require.main === module) {
+function run(args, callback){
   var command = args['_'][0]; 
   var singlePackage = args['_'][1];
   var type = args.type; 
 
   if (!command) {
-    console.error('missing mason-js args');
+    log.error('missing mason-js args');
+    process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
+    process.exit(1);
+  }
+
+  if (command !== 'link' && command !== 'install'){
+    log.error('invalid command');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
   }
 
   if (command === 'link'){
-    download.link(masonPath, function(err, result){
+    index.link(masonPath, function(err, result){
       if (err) return callback(err);
     });
   }
 
   if (command === 'install' && !singlePackage){
     reader.fileReader(masonPath, function(err, packages){
-      download(packages, function(err, result){
-        if (err) return callback(err);
-        log.info('Finished downloading packages')
+      log.info('Mason Package Install Starting');
+      index.install(packages, function(err){
+        if (err) throw err;
+        log.info('Finished downloading packages'); 
       });
     });
   }
 
-  // add more validation here
-  if (singlePackage && !args.type) {
-    console.error('include package type with package info: example protozero=1.5.1 --type=header');
+  if (command === 'install' && singlePackage && !args.type) {
+    log.error('include package type with package info: example protozero=1.5.1 --type=header');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
     process.exit(1);
   }
   
   if (command === 'install' && singlePackage && args.type){
-    var params = generatePackageObject(singlePackage);
-    var package = reader.buildParams(singlePackage, type);
-    download([package], function(err, result){
-      if (err) return callback(err);
+    if (args.type !== 'header' && args.type !=='compiled'){
+      log.error('invalid package type');
+      process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
+      process.exit(1);
+    }
+
+    var params = reader.generatePackageObject(singlePackage);
+    var package = reader.buildParams(params, type);
+    index.install([package], function(err){
+      if (err) throw err;
+      log.info('Finished downloading packages');
+      if (args.save){
+        reader.fileWriter(masonPath, package, type, function(err, result){
+          if (err) return callback(err);
+          if (result){
+            log.info(`${package} added to mason-versions.ini`);
+          }
+        });
+      }
     });
   }
 }
 
-
-
-
-
-
-
-
-
-
+if (require.main === module) {
+  run(args, function(err, result){
+    if (err) return callback(err);
+  });
+}
