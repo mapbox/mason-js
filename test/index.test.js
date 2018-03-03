@@ -78,7 +78,7 @@ test('[symlink] links files', function(assert) {
 
   var proto = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'protozero', 'byteswap.hpp');
   var cairo = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'cairo', 'cairo-ft.h');
-  var masonPath = './test/fixtures/mason-versions.ini';
+  var masonPath = './test/fixtures/fake-mason-versions.ini';
 
   index.link(masonPath, function() {
     assert.equal(fs.existsSync(proto), true);
@@ -117,7 +117,7 @@ test('[symlink] file to link doesnt exist', function(assert) {
 
   sinon.stub(sym, 'buildLinkPaths').returns(paths);
 
-  var masonPath = './test/fixtures/mason-versions.ini';
+  var masonPath = './test/fixtures/fake-mason-versions.ini';
 
   index.link(masonPath, function(err) {
     assert.equal(/ENOENT: no such file or directory/.test(err.message), true);

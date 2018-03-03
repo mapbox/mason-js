@@ -45,7 +45,7 @@ var compiledPackage = {
 };
 
 test('reads ini file correctly', function(assert) {
-  var masonPath = './test/fixtures/mason-versions.ini';
+  var masonPath = './test/fixtures/fake-mason-versions.ini';
 
   reader.fileReader(masonPath, function(err, result) {
     assert.equal(result.length, 3);
@@ -114,8 +114,8 @@ test('[mason-js] missing package type', function(assert) {
 });
 
 test('[add package to file] adds header package to mason-versions.ini', function(assert) {
-  var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
-  var dst = path.join(__dirname + '/fixtures/out', 'mason-versions.ini');
+  var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
+  var dst = path.join(__dirname + '/fixtures/out', 'fake-mason-versions.ini');
   fs.createReadStream(src).pipe(fs.createWriteStream(dst));
 
   var package = 'crazynewpackage=1.5.1';
@@ -132,8 +132,8 @@ test('[add package to file] adds header package to mason-versions.ini', function
 });
 
 test('[add package to file] adds compiled package to mason-versions.ini', function(assert) {
-  var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
-  var dst = path.join(__dirname + '/fixtures/out', 'mason-versions.ini');
+  var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
+  var dst = path.join(__dirname + '/fixtures/out', 'fake-mason-versions.ini');
   fs.createReadStream(src).pipe(fs.createWriteStream(dst));
 
   var package = 'crazynewpackage=1.5.1';
@@ -150,7 +150,7 @@ test('[add package to file] adds compiled package to mason-versions.ini', functi
 });
 
 test('[add package to file] does not write package already in file', function(assert) {
-  var src = path.join(__dirname + '/fixtures/', 'mason-versions.ini');
+  var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
 
   var package = 'protozero=1.5.1';
   var type = 'headers';
