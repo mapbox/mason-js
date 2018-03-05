@@ -8,6 +8,9 @@ var mason = require('../bin/mason-js');
 var rimraf = require('rimraf');
 var stream = require('stream');
 var log = require('npmlog');
+var fse = require('fs-extra');
+var index = require('../');
+
 
 test('setup', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
@@ -55,16 +58,11 @@ test('[install] installs a package from mason-versions.ini', function(assert) {
     assert.equal(log.info.getCall(2).args[0], 'tarball');
     assert.equal(log.info.getCall(2).args[1], 'done parsing tarball for protozero');  
     assert.equal(result, true);
+  
+    fse.removeSync(path.join(__dirname + '/fixtures/out', 'protozero'));
     reader.fileReader.restore();
     log.info.restore();
     request.get.restore();
-    assert.end();
-  });
-});
-
-test('cleanup', function(assert) {
-  rimraf(__dirname + '/fixtures/out', function(err) {
-    assert.ifError(err);
     assert.end();
   });
 });
@@ -82,6 +80,22 @@ test('[install] no mason-versions.ini', function(assert) {
   mason.run(args, masonPath, function(err) {
     assert.equal(err.message, 'File doesnt exist');
     reader.fileReader.restore();
+    assert.end();
+  });
+});
+
+test('[installs] single package', function(assert) {
+
+  sinon.stub(index, 'install').callsFake(function(masonPath, callback){
+    return callback(null, true);
+  });
+  
+  var masonPath = './test/fixtures/fake-mason-versions.ini';
+  var args = { _: [ 'install', 'protozero=1.5.1' ], type: 'header' };
+
+  mason.run(args, masonPath, function(err, result) {
+    assert.equal(result, true);
+    index.install.restore();
     assert.end();
   });
 });
