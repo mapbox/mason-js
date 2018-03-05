@@ -29,11 +29,13 @@ function link(masonPath, callback){
 function install(packageList, callback) {
   var libraries = packageList;
   var q = d3.queue(1);
+  var update = false; 
 
   libraries.forEach(function(options, i) {
     if (options) {
       loader.checkLibraryExists(options, function(err, exists) {
         if (!exists) {
+          update = true; 
           log.info('check', 'checked for ' + options.name + ' (not found locally)');
           q.defer(loader.place_binary, options);
           if (libraries.length - 1 === i) {
@@ -42,6 +44,8 @@ function install(packageList, callback) {
               return callback(null);
             });
           }
+        }else if(libraries.length - 1 === i && !update){
+          return callback();
         }
       });
     }
