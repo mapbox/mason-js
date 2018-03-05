@@ -11,7 +11,7 @@ var args = require('minimist')(process.argv.slice(2));
 
 var masonPath = path.join(process.cwd(), '/mason-versions.ini');
 
-function run(args, callback){
+function run(args, masonPath, callback){
   var command = args['_'][0]; 
   var singlePackage = args['_'][1];
   var type = args.type; 
@@ -36,10 +36,12 @@ function run(args, callback){
 
   if (command === 'install' && !singlePackage){
     reader.fileReader(masonPath, function(err, packages){
+      if (err) return callback(err);
       log.info('Mason Package Install Starting');
       index.install(packages, function(err){
         if (err) throw err;
         log.info('Finished downloading packages'); 
+        return callback(null, true); 
       });
     });
   }
@@ -68,14 +70,28 @@ function run(args, callback){
           if (result){
             log.info(`${package} added to mason-versions.ini`);
           }
+          return callback(null, true);
         });
       }
+      return callback(null, true);
     });
   }
 }
 
 if (require.main === module) {
-  run(args, function(err, result){
-    if (err) return callback(err);
+var masonIni = path.join(process.cwd(), '/mason-versions.ini');
+   
+if (require.main === module) {
+  run(args, masonIni, function(err){
+    if (err)  {
+      log.error(err);
+      process.exit(1);
+    }else{
+      log.info('Completed');
+      process.exit(0);
+    }
   });
 }
+}
+
+module.exports = {run:run}
