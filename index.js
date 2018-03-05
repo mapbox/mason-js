@@ -42,6 +42,8 @@ function install(packageList, callback) {
               return callback(null);
             });
           }
+        }else if(libraries.length - 1 === i && !update){
+          return callback(null, true);
         }
       });
     }
