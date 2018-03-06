@@ -1,5 +1,5 @@
 {
-  "name": "mason-js",
+  "name": "mason-js-sdk",
   "version": "0.0.1-alpha",
   "description": "js client for mason",
   "main": "index.js",
