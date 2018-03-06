@@ -1,2 +1,2 @@
-tests
-.travis.yml
+test
+.circleci
