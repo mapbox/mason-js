@@ -29,6 +29,7 @@ function link(masonPath, callback){
 function install(packageList, callback) {
   var libraries = packageList;
   var q = d3.queue(1);
+  var libCheck = true; 
 
   libraries.forEach(function(options, i) {
     if (options) {
@@ -37,10 +38,11 @@ function install(packageList, callback) {
           log.info('check', 'checked for ' + options.name + ' (not found locally)');
           q.defer(loader.place_binary, options);
           if (libraries.length - 1 === i) {
-            q.awaitAll(function(err) {
+            setTimeout(function(){
+              q.awaitAll(function(err) {
               if (err) return callback(err);
               return callback(null);
-            });
+            });},200);
           }
         }
       });
