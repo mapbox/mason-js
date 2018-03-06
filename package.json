@@ -1,6 +1,6 @@
 {
   "name": "mason-js",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha",
   "description": "js client for mason",
   "main": "index.js",
   "bin": {
