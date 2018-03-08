@@ -16,21 +16,23 @@ function run(args, masonPath, callback){
   var singlePackage = args['_'][1];
   var type = args.type; 
 
+  // return callback error 
   if (!command) {
-    log.error('missing mason-js args');
+    var err = new Error('missing mason-js args');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
-    process.exit(1);
+    return callback(err);
   }
 
   if (command !== 'link' && command !== 'install'){
-    log.error('invalid command');
+    var err = new Error('invalid command');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
-    process.exit(1);
+    return callback(err);
   }
 
   if (command === 'link'){
     index.link(masonPath, function(err, result){
       if (err) return callback(err);
+      return callback(null, result); 
     });
   }
 
@@ -47,20 +49,21 @@ function run(args, masonPath, callback){
   }
 
   if (command === 'install' && singlePackage && !args.type) {
-    log.error('include package type with package info: example protozero=1.5.1 --type=header');
+    var err = new Error('include package type with package info: example protozero=1.5.1 --type=header');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
-    process.exit(1);
+    return callback(err);
   }
   
   if (command === 'install' && singlePackage && args.type){
     if (args.type !== 'header' && args.type !=='compiled'){
-      log.error('invalid package type');
+      var err = new Error('invalid package type');
       process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
-      process.exit(1);
+      return callback(err);
     }
 
     var params = reader.generatePackageObject(singlePackage);
     var package = reader.buildParams(params, type);
+
     index.install([package], function(err){
       if (err) throw err;
       log.info('Finished downloading packages');

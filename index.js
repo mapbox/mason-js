@@ -1,4 +1,3 @@
-var log = require('npmlog');
 var loader = require('./lib/retrieve_package.js');
 var sym = require('./lib/symlink.js');
 var path = require('path');
@@ -21,7 +20,7 @@ function link(masonPath, callback){
     var paths = sym.buildLinkPaths(packages,path.join(process.cwd(), '/mason_packages/.link'));
     sym.symLink(paths, function(err, result){
       if (err) return callback(err);
-      return callback(result);
+      return callback(null, result);
     });
   });
 }  
@@ -31,23 +30,21 @@ function install(packageList, callback) {
   var q = d3.queue(1);
   var libCheck = true; 
 
-  libraries.forEach(function(options, i) {
+  libraries.forEach(function(options) {
     if (options) {
       loader.checkLibraryExists(options, function(err, exists) {
         if (!exists) {
-          log.info('check', 'checked for ' + options.name + ' (not found locally)');
           q.defer(loader.place_binary, options);
-          if (libraries.length - 1 === i) {
-            setTimeout(function(){
-              q.awaitAll(function(err) {
-              if (err) return callback(err);
-              return callback(null);
-            });},200);
-          }
         }
-      });
+      }); 
     }
   });
+
+  q.awaitAll(function(err, result) {
+    if (err) return callback(err);
+    return callback(null);
+  });
+
 }
 
 
