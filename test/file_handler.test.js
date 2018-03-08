@@ -2,7 +2,7 @@ var test = require('tape');
 var os = require('os');
 var path = require('path');
 var platform = os.platform();
-var reader = require('../lib/file_reader.js');
+var reader = require('../lib/file_handler.js');
 var exec = require('child_process').exec;
 var appDir = process.cwd();
 var helpText = 'Usage:\n  mason-js install \n\n  or \n\n  mason-js install <package> <package type>\n\nDescription:\n  mason-js is a JS client for mason that installs c++ packages locally (both header-only and compiled). mason-js can install all packages declared in a mason-versions.ini file or it can install a single package. \n\nExample:\n  mason-js install  \n\n  OR\n\n  mason-js install protozero=1.5.1 --type=header \n\nOptions:\n  --type [header or compiled]\n';
@@ -156,7 +156,7 @@ test('[add package to file] does not write package already in file', function(as
   var type = 'headers';
 
   reader.fileWriter(src,package, type, function(err) {
-    assert.equal(err.message, 'File could not be saved, already exists in mason-versions.ini.');
+    assert.equal(err.message, 'Package could not be saved, already exists in mason-versions.ini.');
     assert.end();
   });
 });

@@ -1,7 +1,7 @@
 var loader = require('./lib/retrieve_package.js');
 var sym = require('./lib/symlink.js');
 var path = require('path');
-var reader = require('./lib/file_reader.js');
+var reader = require('./lib/file_handler.js');
 var fse = require('fs-extra');
 var fs = require('fs');
 var d3 = require('d3-queue');
@@ -28,7 +28,6 @@ function link(masonPath, callback){
 function install(packageList, callback) {
   var libraries = packageList;
   var q = d3.queue(1);
-  var libCheck = true; 
 
   libraries.forEach(function(options) {
     if (options) {
