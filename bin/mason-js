@@ -16,7 +16,6 @@ function run(args, masonPath, callback){
   var singlePackage = args['_'][1];
   var type = args.type; 
 
-  // return callback error 
   if (!command) {
     var err = new Error('missing mason-js args');
     process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
@@ -29,10 +28,29 @@ function run(args, masonPath, callback){
     return callback(err);
   }
 
-  if (command === 'link'){
+  if (singlePackage && !args.type) {
+    var err = new Error('include package type with package info: example protozero=1.5.1 --type=header');
+    process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
+    return callback(err);
+  }
+
+  if (command === 'link' && !singlePackage){
     index.link(masonPath, function(err, result){
       if (err) return callback(err);
       return callback(null, result); 
+    });
+  }
+
+  if (command === 'link' && singlePackage){
+    var params = reader.generatePackageObject(singlePackage);
+
+    var package = reader.buildParams(params, type);
+
+    var paths = sym.buildLinkPaths([package],path.join(process.cwd(), '/mason_packages/.link'));
+
+    sym.symLink(paths, function(err, result){
+      if (err) return callback(err);
+      return callback(null, result);
     });
   }
 
@@ -46,12 +64,6 @@ function run(args, masonPath, callback){
         return callback(null, true); 
       });
     });
-  }
-
-  if (command === 'install' && singlePackage && !args.type) {
-    var err = new Error('include package type with package info: example protozero=1.5.1 --type=header');
-    process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
-    return callback(err);
   }
   
   if (command === 'install' && singlePackage && args.type){

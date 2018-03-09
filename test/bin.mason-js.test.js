@@ -10,7 +10,8 @@ var stream = require('stream');
 var log = require('npmlog');
 var fse = require('fs-extra');
 var index = require('../');
-
+var appDir = process.cwd();
+var sym = require('../lib/symlink.js');
 
 test('setup', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
@@ -99,6 +100,35 @@ test('[installs] single package', function(assert) {
     assert.end();
   });
 });
+
+test('[links] single package', function(assert) {
+  var args = { _: [ 'link', 'protozero=1.5.1' ] };
+
+  var symlinkPath = path.join(global.appRoot, 'test/fixtures/out/mason_packages/.link');
+  var masonPath = './test/fixtures/fake-mason-versions.ini';
+
+  var paths = [
+    [appDir + '/test/fixtures/headers/protozero/1.5.1',
+      symlinkPath
+    ]
+  ];
+
+  sinon.stub(sym, 'buildLinkPaths').returns(paths);
+
+  var proto = path.join(appDir + '/test/fixtures/out', 'mason_packages/.link', 'include', 'protozero', 'byteswap.hpp');
+
+  sinon.spy(log, 'info');
+
+  mason.run(args, masonPath, function(err, result) {
+    assert.equal(result, true);
+    assert.equal(fs.existsSync(proto), true);
+    assert.equal(log.info.getCall(0).args[0], 'Symlinked: ');
+    log.info.restore();
+    sym.buildLinkPaths.restore();
+    assert.end();
+  });
+});
+
 
 test('cleanup', function(assert) {
   rimraf(__dirname + '/fixtures/out', function(err) {

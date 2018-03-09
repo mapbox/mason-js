@@ -131,7 +131,7 @@ test('[add package to file] adds header package to mason-versions.ini', function
   });
 });
 
-test('[add package to file] adds compiled package to mason-versions.ini', function(assert) {
+test('[add package to file] adds compiled package to mason-versions.ini', function(assert) { 
   var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
   var dst = path.join(__dirname + '/fixtures/out', 'fake-mason-versions.ini');
   fs.createReadStream(src).pipe(fs.createWriteStream(dst));
