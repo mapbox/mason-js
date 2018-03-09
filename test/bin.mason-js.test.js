@@ -102,7 +102,7 @@ test('[installs] single package', function(assert) {
 });
 
 test('[links] single package', function(assert) {
-  var args = { _: [ 'link', 'protozero=1.5.1' ] };
+  var args = { _: [ 'link', 'protozero=1.5.1' ], type: 'header' };
 
   var symlinkPath = path.join(global.appRoot, 'test/fixtures/out/mason_packages/.link');
   var masonPath = './test/fixtures/fake-mason-versions.ini';
@@ -119,10 +119,8 @@ test('[links] single package', function(assert) {
 
   sinon.spy(log, 'info');
 
-  mason.run(args, masonPath, function(err, result) {
-    assert.equal(result, true);
+  mason.run(args, masonPath, function() {
     assert.equal(fs.existsSync(proto), true);
-    assert.equal(log.info.getCall(0).args[0], 'Symlinked: ');
     log.info.restore();
     sym.buildLinkPaths.restore();
     assert.end();
