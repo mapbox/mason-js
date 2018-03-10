@@ -37,7 +37,7 @@ function run(args, masonPath, callback){
   if (command === 'link' && !singlePackage){
     index.link(masonPath, function(err, result){
       if (err) return callback(err);
-      return callback(null, result); 
+      return callback(null); 
     });
   }
 
@@ -50,7 +50,7 @@ function run(args, masonPath, callback){
 
     sym.symLink(paths, function(err, result){
       if (err) return callback(err);
-      return callback(null, result);
+      return callback(null);
     });
   }
 
