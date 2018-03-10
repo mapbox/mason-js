@@ -46,7 +46,7 @@ function run(args, masonPath, callback){
 
     var package = reader.buildParams(params, type);
 
-    var paths = sym.buildLinkPaths([package],path.join(process.cwd(), '/mason_packages/.link'));
+    var paths = sym.buildLinkPaths([package], path.join(process.cwd(), '/mason_packages/.link'));
 
     sym.symLink(paths, function(err, result){
       if (err) return callback(err);
@@ -59,7 +59,7 @@ function run(args, masonPath, callback){
       if (err) return callback(err);
       log.info('Mason Package Install Starting');
       index.install(packages, function(err){
-        if (err) throw err;
+        if (err) return callback(err);
         log.info('Finished downloading packages'); 
         return callback(null, true); 
       });
@@ -77,7 +77,7 @@ function run(args, masonPath, callback){
     var package = reader.buildParams(params, type);
 
     index.install([package], function(err){
-      if (err) throw err;
+      if (err) return callback(err);
       log.info('Finished downloading packages');
       if (args.save){
         reader.fileWriter(masonPath, package, type, function(err, result){
@@ -85,7 +85,7 @@ function run(args, masonPath, callback){
           if (result){
             log.info(`${package} added to mason-versions.ini`);
           }
-          return callback(null, true);
+          return callback(null);
         });
       }
       return callback(null, true);

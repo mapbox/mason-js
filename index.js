@@ -32,8 +32,9 @@ function install(packageList, callback) {
   libraries.forEach(function(options) {
     if (options) {
       loader.checkLibraryExists(options, function(err, exists) {
+        if (err) return callback(err);
         if (!exists) {
-          q.defer(loader.place_binary, options);
+          q.defer(loader.placeBinary, options);
         }
       }); 
     }
@@ -43,7 +44,6 @@ function install(packageList, callback) {
     if (err) return callback(err);
     return callback(null);
   });
-
 }
 
 
