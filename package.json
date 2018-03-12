@@ -1,6 +1,6 @@
 {
   "name": "mason-js-sdk",
-  "version": "0.0.3-alpha",
+  "version": "0.1.0-alpha1",
   "description": "js client for mason",
   "main": "index.js",
   "bin": {
