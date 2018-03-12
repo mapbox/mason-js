@@ -2,8 +2,6 @@ var loader = require('./lib/retrieve_package.js');
 var sym = require('./lib/symlink.js');
 var path = require('path');
 var reader = require('./lib/file_handler.js');
-var fse = require('fs-extra');
-var fs = require('fs');
 var d3 = require('d3-queue');
 
 /* eslint-disable */
@@ -12,9 +10,7 @@ function link(masonPath, callback){
 // linting is disabled because it errors on callback param
 
 /* eslint-disable */
-  if (fs.existsSync(path.join(process.cwd(), '/mason_packages/.link'))) {
-    fse.removeSync(path.join(process.cwd(), '/mason_packages/.link'));
-  }
+
   reader.fileReader(masonPath, function(err, packages){
     if (err) return callback(err);
     var paths = sym.buildLinkPaths(packages,path.join(process.cwd(), '/mason_packages/.link'));
