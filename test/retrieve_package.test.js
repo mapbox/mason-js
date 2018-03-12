@@ -45,7 +45,7 @@ test('[place binary] places binary', function(assert) {
 
   sinon.stub(request, 'get').returns(mockStream);
 
-  retriever.place_binary(options, function() {
+  retriever.placeBinary(options, function() {
     sinon.assert.calledOnce(mockStream.pipe);
     sinon.assert.calledOnce(log.info);
     assert.equal(log.info.getCall(0).args[0], 'tarball');
@@ -85,7 +85,7 @@ test('[place binary] gets a request error', function(assert) {
 
   sinon.stub(request, 'get').returns(mockStream);
 
-  retriever.place_binary(options, function(err) {
+  retriever.placeBinary(options, function(err) {
     assert.equal(err.message, 'there was a request error');
     request.get.restore();
     assert.end();
@@ -116,7 +116,7 @@ test('[place binary] request returns status code error ', function(assert) {
   mockStream.pipe = sinon.stub();
 
   sinon.stub(request, 'get').returns(mockStream);
-  retriever.place_binary(options, function(err) {
+  retriever.placeBinary(options, function(err) {
     assert.equal(err.message, '400 status code downloading tarball http://fakeurl.com');
     request.get.restore();
     assert.end();
@@ -147,7 +147,7 @@ test('[place binary] request returns close error ', function(assert) {
 
   sinon.stub(request, 'get').returns(mockStream);
 
-  retriever.place_binary(options, function(err) {
+  retriever.placeBinary(options, function(err) {
     assert.equal(err.message, 'Connection closed while downloading tarball file');
     request.get.restore();
     assert.end();
