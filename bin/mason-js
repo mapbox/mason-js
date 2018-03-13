@@ -72,24 +72,29 @@ function run(args, masonPath, callback){
       process.stdout.write(fs.readFileSync(__dirname + '/help', 'utf8'));
       return callback(err);
     }
-
+    
     var params = reader.generatePackageObject(singlePackage);
-    var package = reader.buildParams(params, type);
+    var package = reader.buildParams(params, args.type);
 
-    index.install([package], function(err){
-      if (err) return callback(err);
-      log.info('Finished downloading packages');
-      if (args.save){
-        reader.fileWriter(masonPath, package, type, function(err, result){
+    if (args.save){
+      reader.fileWriter(masonPath, singlePackage, args.type, function(err, result){
+        if (err) return callback(err);
+        if (result){
+          log.info(`${singlePackage} added to mason-versions.ini`);
+        }
+        index.install([package], function(err){
           if (err) return callback(err);
-          if (result){
-            log.info(`${package} added to mason-versions.ini`);
-          }
-          return callback(null);
+          log.info('Finished downloading packages');
+          return callback(null, true);
         });
-      }
-      return callback(null, true);
-    });
+      });
+    }else{
+      index.install([package], function(err){
+        if (err) return callback(err);
+        log.info('Finished downloading packages');
+        return callback(null, true);
+      });
+    }
   }
 }
 
