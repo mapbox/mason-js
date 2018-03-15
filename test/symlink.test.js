@@ -97,6 +97,23 @@ test('[symlink] fails to create symlink - directory not found', function(assert)
   });
 });
 
+test('[symlink] overwrites existing files', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'config.cpp');
+  var dst = path.join(__dirname + '/fixtures/', 'config-copy.cpp');
+
+  var paths = [
+    [src,
+      dst
+    ]
+  ];
+
+  link.symLink(paths, function(err, result) {
+    assert.equal(err, null); 
+    assert.equal(result, true);
+    assert.end();
+  });
+});
+
 test('[symlink] doesnt symlink mason.ini files', function(assert) {
   var src = '/test/fixtures/headers/protozro/1.5.1/mason.ini'; 
   var dest = 'symlink/path'; 

@@ -116,7 +116,8 @@ test('[mason-js] missing package type', function(assert) {
 test('[add package to file] adds header package to mason-versions.ini', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
   var dst = path.join(__dirname + '/fixtures/out', 'fake-mason-versions.ini');
-  fs.createReadStream(src).pipe(fs.createWriteStream(dst));
+  var content = fs.readFileSync(src);
+  fs.writeFileSync(dst, content);
 
   var package = 'crazynewpackage=1.5.1';
   var type = 'header';
@@ -134,7 +135,8 @@ test('[add package to file] adds header package to mason-versions.ini', function
 test('[add package to file] adds compiled package to mason-versions.ini', function(assert) { 
   var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
   var dst = path.join(__dirname + '/fixtures/out', 'fake-mason-versions.ini');
-  fs.createReadStream(src).pipe(fs.createWriteStream(dst));
+  var content = fs.readFileSync(src);
+  fs.writeFileSync(dst, content);
 
   var package = 'crazynewpackage=1.5.1';
   var type = 'compiled';
@@ -144,6 +146,46 @@ test('[add package to file] adds compiled package to mason-versions.ini', functi
     assert.equal(res, true);
     var data = fs.readFileSync(dst, 'utf8');
     assert.equal(data, expected);
+    assert.equal(/crazynewpackage=1.5.1/.test(data), true);
+    assert.end();
+  });
+});
+
+test('[add package to file] adds [compiled] header and package to mason-versions.ini', function(assert) { 
+  var src = path.join(__dirname + '/fixtures/', 'mv-no-compiled.ini');
+  var dst = path.join(__dirname + '/fixtures/out', 'mv-no-compiled.ini');
+  var content = fs.readFileSync(src);
+  fs.writeFileSync(dst, content);
+
+  var package = 'crazynewpackage=1.5.1';
+  var type = 'compiled';
+  var expected = '[headers]\nboost=1.65.1\nprotozero=1.5.1\n[compiled]\ncrazynewpackage=1.5.1\n';
+
+  reader.fileWriter(dst,package, type, function(err, res) {
+    assert.equal(res, true);
+    var data = fs.readFileSync(dst, 'utf8');
+    assert.equal(data, expected);
+    assert.equal(/compiled/.test(data), true);
+    assert.equal(/crazynewpackage=1.5.1/.test(data), true);
+    assert.end();
+  });
+});
+
+test('[add package to file] adds [headers] header and header package to mason-versions.ini', function(assert) { 
+  var src = path.join(__dirname + '/fixtures/', 'mv-no-header.ini');
+  var dst = path.join(__dirname + '/fixtures/out', 'mv-no-header.ini');
+  var content = fs.readFileSync(src);
+  fs.writeFileSync(dst, content);
+  
+  var package = 'crazynewpackage=1.5.1';
+  var type = 'header';
+  var expected = '[headers]\ncrazynewpackage=1.5.1\n[compiled]\nllvm=32.3';
+
+  reader.fileWriter(dst,package, type, function(err, res) {
+    assert.equal(res, true);
+    var data = fs.readFileSync(dst, 'utf8');
+    assert.equal(data, expected);
+    assert.equal(/compiled/.test(data), true);
     assert.equal(/crazynewpackage=1.5.1/.test(data), true);
     assert.end();
   });
