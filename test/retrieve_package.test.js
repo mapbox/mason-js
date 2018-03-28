@@ -2,7 +2,7 @@ var test = require('tape');
 var fs = require('fs');
 var path = require('path');
 var sinon = require('sinon');
-var request = require('request');
+var needle = require('needle');
 var retriever = require('../lib/retrieve_package');
 var rimraf = require('rimraf');
 var stream = require('stream');
@@ -43,7 +43,7 @@ test('[place binary] places binary', function(assert) {
   sinon.spy(mockStream, 'pipe');
   sinon.spy(log, 'info');
 
-  sinon.stub(request, 'get').returns(mockStream);
+  sinon.stub(needle, 'get').returns(mockStream);
 
   retriever.placeBinary(options, function() {
     sinon.assert.calledOnce(mockStream.pipe);
@@ -55,12 +55,12 @@ test('[place binary] places binary', function(assert) {
       if (err) return console.error(err);
     });
     log.info.restore();
-    request.get.restore();
+    needle.get.restore();
     assert.end();
   });
 });
 
-test('[place binary] gets a request error', function(assert) {
+test('[place binary] gets a needle error', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
 
   var options = {
@@ -76,23 +76,23 @@ test('[place binary] gets a request error', function(assert) {
   const mockStream = {};
   mockStream.on = function(event, callback) {
     if (event === 'error') {
-      return callback(new Error('there was a request error'));
+      return callback(new Error('there was a needle error'));
     }
   };
 
   mockStream.pipe = sinon.stub();
   mockStream.pipe.on = sinon.stub();
 
-  sinon.stub(request, 'get').returns(mockStream);
+  sinon.stub(needle, 'get').returns(mockStream);
 
   retriever.placeBinary(options, function(err) {
-    assert.equal(err.message, 'there was a request error');
-    request.get.restore();
+    assert.equal(err.message, 'there was a needle error');
+    needle.get.restore();
     assert.end();
   });
 });
 
-test('[place binary] request returns status code error ', function(assert) {
+test('[place binary] needle returns status code error ', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
 
   var options = {
@@ -115,15 +115,15 @@ test('[place binary] request returns status code error ', function(assert) {
 
   mockStream.pipe = sinon.stub();
 
-  sinon.stub(request, 'get').returns(mockStream);
+  sinon.stub(needle, 'get').returns(mockStream);
   retriever.placeBinary(options, function(err) {
     assert.equal(err.message, '400 status code downloading tarball http://fakeurl.com');
-    request.get.restore();
+    needle.get.restore();
     assert.end();
   });
 });
 
-test('[place binary] request returns close error ', function(assert) {
+test('[place binary] needle returns close error ', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
 
   var options = {
@@ -145,11 +145,11 @@ test('[place binary] request returns close error ', function(assert) {
 
   mockStream.pipe = sinon.stub();
 
-  sinon.stub(request, 'get').returns(mockStream);
+  sinon.stub(needle, 'get').returns(mockStream);
 
   retriever.placeBinary(options, function(err) {
     assert.equal(err.message, 'Connection closed while downloading tarball file');
-    request.get.restore();
+    needle.get.restore();
     assert.end();
   });
 });

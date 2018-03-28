@@ -2,7 +2,7 @@ var test = require('tape');
 var fs = require('fs');
 var path = require('path');
 var sinon = require('sinon');
-var request = require('request');
+var needle = require('needle');
 var stream = require('stream');
 var log = require('npmlog');
 var fse = require('fs-extra');
@@ -40,7 +40,7 @@ test('[install] installs a package', function(assert) {
   sinon.spy(mockStream, 'pipe');
   sinon.spy(log, 'info');
 
-  sinon.stub(request, 'get').returns(mockStream);
+  sinon.stub(needle, 'get').returns(mockStream);
 
   index.install(packageList, function() {
     sinon.assert.calledOnce(mockStream.pipe);
@@ -52,7 +52,7 @@ test('[install] installs a package', function(assert) {
     assert.equal(fs.existsSync(outfile), true);
     fse.removeSync(path.join(__dirname + '/fixtures/out', 'protozero'));
     log.info.restore();
-    request.get.restore();
+    needle.get.restore();
     assert.end();
   });
 });

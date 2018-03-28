@@ -2,7 +2,7 @@ var test = require('tape');
 var fs = require('fs');
 var path = require('path');
 var sinon = require('sinon');
-var request = require('request');
+var needle = require('needle');
 var reader = require('../lib/file_handler');
 var mason = require('../bin/mason-js');
 var rimraf = require('rimraf');
@@ -46,7 +46,7 @@ test('[install] installs a package from mason-versions.ini', function(assert) {
   sinon.spy(mockStream, 'pipe');
   sinon.spy(log, 'info');
 
-  sinon.stub(request, 'get').returns(mockStream);
+  sinon.stub(needle, 'get').returns(mockStream);
   
   var masonPath = './test/fixtures/fake-mason-versions.ini';
   var args = { _: [ 'install' ] };
@@ -63,7 +63,7 @@ test('[install] installs a package from mason-versions.ini', function(assert) {
     fse.removeSync(path.join(__dirname + '/fixtures/out', 'protozero'));
     reader.fileReader.restore();
     log.info.restore();
-    request.get.restore();
+    needle.get.restore();
     assert.end();
   });
 });
