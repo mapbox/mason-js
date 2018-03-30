@@ -7,8 +7,8 @@ var fse = require('fs-extra');
 var appDir = process.cwd();
 var sinon = require('sinon');
 var log = require('npmlog');
-const firstSymSource = path.join(__dirname + '/fixtures/', 'symlink/');
-const secondSymSource = path.join(__dirname + '/fixtures/', 'symlink-copy/');
+var firstSymSource = path.join(__dirname + '/fixtures/', 'symlink/');
+var secondSymSource = path.join(__dirname + '/fixtures/', 'symlink-copy/');
   
 global.appRoot = process.cwd();
 
@@ -136,18 +136,18 @@ test('[symlink] overwrites existing files', function(assert) {
 });
 
 test('[symlink] overwrites existing destination symlink with symlink source', function(assert) {
-  const src = path.join(__dirname + '/fixtures/', 'fake', 'temp'); 
-  const dst = path.join(__dirname + '/fixtures/', 'fake', 'tmp'); 
+  var src = path.join(__dirname + '/fixtures/', 'fake', 'temp'); 
+  var dst = path.join(__dirname + '/fixtures/', 'fake', 'tmp'); 
   
-  const paths = [
+  var paths = [
     [src, dst]
   ];
 
   sinon.spy(fs, 'existsSync');
   sinon.spy(fse, 'removeSync');
 
-  setupSymlinks(function(err, result){
-    const lsync = fs.lstatSync(path.join(__dirname + '/fixtures/', 'fake', 'temp'));
+  setupSymlinks(function(){
+    var lsync = fs.lstatSync(path.join(__dirname + '/fixtures/', 'fake', 'temp'));
     assert.equal(lsync.isSymbolicLink(), true, 'src is symbolic link'); 
 
     link.symLink(paths, function(err, result) {
@@ -155,7 +155,7 @@ test('[symlink] overwrites existing destination symlink with symlink source', fu
       assert.equal(result, true);
       assert.equal(fse.removeSync.calledOnce, true);
       assert.equal(fs.existsSync.calledOnce, true);
-      cleanUpSymlinks(function(err, result){
+      cleanUpSymlinks(function(){
         fs.existsSync.restore();
         fse.removeSync.restore();
         assert.end();
