@@ -154,7 +154,6 @@ test('[symlink] overwrites existing destination symlink with symlink source', fu
       assert.equal(err, null); 
       assert.equal(result, true);
       assert.equal(fse.removeSync.calledOnce, true, 'remove sync called once');
-      console.log('existsync', fs.existsSync);
       assert.equal(fs.existsSync.calledOnce, true);
       cleanUpSymlinks(function(){
         fs.existsSync.restore();
