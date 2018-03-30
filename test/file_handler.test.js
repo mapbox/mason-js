@@ -116,8 +116,8 @@ test('[mason-js] missing package type', function(assert) {
 test('[add package to file] adds header package to mason-versions.ini', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
   var dst = path.join(__dirname + '/fixtures/out', 'fake-mason-versions.ini');
-  fs.writeFileSync(src, '');
-  fs.writeFileSync(dst, '');
+  var content = fs.readFileSync(src);
+  fs.writeFileSync(dst, content);
 
   var package = 'crazynewpackage=1.5.1';
   var type = 'header';
