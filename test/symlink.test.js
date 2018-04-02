@@ -135,7 +135,7 @@ test('[symlink] overwrites existing files', function(assert) {
   });
 });
 
-test('[symlink] overwrites existing destination symlink with symlink source', function(assert) {
+test.only('[symlink] overwrites existing destination symlink with symlink source', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'fake', 'temp'); 
   var dst = path.join(__dirname + '/fixtures/', 'fake', 'tmp'); 
   
