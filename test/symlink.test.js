@@ -7,13 +7,34 @@ var fse = require('fs-extra');
 var appDir = process.cwd();
 var sinon = require('sinon');
 var log = require('npmlog');
-
+var firstSymSource = path.join(__dirname + '/fixtures/', 'symlink/');
+var secondSymSource = path.join(__dirname + '/fixtures/', 'symlink-copy/');
+  
 global.appRoot = process.cwd();
+
+function setupSymlinks(callback){
+
+  fse.mkdirpSync(firstSymSource);
+  fse.mkdirpSync(secondSymSource);
+  fse.mkdirpSync(__dirname + '/fixtures/fake');
+  
+  fs.symlinkSync(secondSymSource, path.join(__dirname + '/fixtures/', 'fake', 'temp')); 
+  fs.symlinkSync(firstSymSource, path.join(__dirname + '/fixtures/', 'fake', 'tmp')); 
+  return callback(null);
+}
+
+function cleanUpSymlinks(callback){
+  fse.removeSync(firstSymSource);
+  fse.removeSync(secondSymSource);
+  fse.removeSync(__dirname + '/fixtures/fake');
+  return callback(null);
+}
 
 test('setup', function(assert) {
 
   if (fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.removeSync(__dirname + '/fixtures/out/mason_packages/.link');
   fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
+
   assert.end();
 });
 
@@ -112,6 +133,35 @@ test('[symlink] overwrites existing files', function(assert) {
     assert.equal(result, true);
     assert.end();
   });
+});
+
+test('[symlink] overwrites existing destination symlink with symlink source', function(assert) {
+  var src = path.join(__dirname + '/fixtures/', 'fake', 'temp'); 
+  var dst = path.join(__dirname + '/fixtures/', 'fake', 'tmp'); 
+  
+  var paths = [
+    [src, dst]
+  ];
+
+  sinon.spy(fs, 'existsSync');
+  sinon.spy(fse, 'removeSync');
+
+  setupSymlinks(function(){
+    var lsync = fs.lstatSync(path.join(__dirname + '/fixtures/', 'fake', 'temp'));
+    assert.equal(lsync.isSymbolicLink(), true, 'src is symbolic link'); 
+
+    link.symLink(paths, function(err, result) {
+      assert.equal(err, null); 
+      assert.equal(result, true);
+      assert.equal(fse.removeSync.calledOnce, true, 'remove sync called once');
+      assert.equal(fs.existsSync.calledOnce, true);
+      cleanUpSymlinks(function(){
+        fs.existsSync.restore();
+        fse.removeSync.restore();
+        assert.end();
+      });
+    });
+  }); 
 });
 
 test('[symlink] doesnt symlink mason.ini files', function(assert) {
