@@ -2,7 +2,6 @@ SHELL = /bin/bash
 
 build:
 	docker build \
-		--build-arg NPMAccessToken="${NPMAccessToken}" \
 		--tag mason-js:latest .
 
 bash:
