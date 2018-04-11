@@ -7,25 +7,25 @@ var fse = require('fs-extra');
 var appDir = process.cwd();
 var sinon = require('sinon');
 var log = require('npmlog');
-var firstSymSource = path.join(__dirname + '/fixtures/', 'symlink/');
-var secondSymSource = path.join(__dirname + '/fixtures/', 'symlink-copy/');
-  
+ 
 global.appRoot = process.cwd();
 
-function setupSymlinks(callback){
-
+function setupSymlinks(filePaths, callback){
+  var firstSymSource = path.join(__dirname + '/fixtures/fake', 'symlink/');
+  var secondSymSource = path.join(__dirname + '/fixtures/fake', 'symlink-copy/');
+ 
   fse.mkdirpSync(firstSymSource);
   fse.mkdirpSync(secondSymSource);
   fse.mkdirpSync(__dirname + '/fixtures/fake');
   
-  fs.symlinkSync(secondSymSource, path.join(__dirname + '/fixtures/', 'fake', 'temp')); 
-  fs.symlinkSync(firstSymSource, path.join(__dirname + '/fixtures/', 'fake', 'tmp')); 
+  fs.symlinkSync(secondSymSource, filePaths[0][0]); 
+  fs.symlinkSync(firstSymSource, filePaths[0][1]); 
   return callback(null);
 }
 
 function cleanUpSymlinks(callback){
-  fse.removeSync(firstSymSource);
-  fse.removeSync(secondSymSource);
+  // fse.removeSync(firstSymSource);
+  // fse.removeSync(secondSymSource);
   fse.removeSync(__dirname + '/fixtures/fake');
   return callback(null);
 }
@@ -145,8 +145,8 @@ test('[symlink] overwrites existing destination symlink with symlink source', fu
 
   sinon.spy(fs, 'existsSync');
   sinon.spy(fse, 'removeSync');
-
-  setupSymlinks(function(){
+  
+  setupSymlinks(paths, function(){
     var lsync = fs.lstatSync(path.join(__dirname + '/fixtures/', 'fake', 'temp'));
     assert.equal(lsync.isSymbolicLink(), true, 'src is symbolic link'); 
 
@@ -155,9 +155,10 @@ test('[symlink] overwrites existing destination symlink with symlink source', fu
       assert.equal(result, true);
       assert.equal(fse.removeSync.calledOnce, true, 'remove sync called once');
       assert.equal(fs.existsSync.calledOnce, true);
+
       cleanUpSymlinks(function(){
         fs.existsSync.restore();
-        fse.removeSync.restore();
+        fse.removeSync.restore();        
         assert.end();
       });
     });
