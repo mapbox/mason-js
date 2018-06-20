@@ -3,10 +3,11 @@ var link = require('../lib/symlink.js');
 var fs = require('fs');
 var path = require('path');
 var rimraf = require('rimraf');
-var fse = require('fs-extra');
 var appDir = process.cwd();
 var sinon = require('sinon');
 var log = require('npmlog');
+var mkdirp = require('mkdirp');
+var fse = require('fs-extra');
 
 global.appRoot = process.cwd();
 
@@ -14,9 +15,9 @@ function setupSymlinks(filePaths, callback){
   var firstSymSource = path.join(__dirname + '/fixtures/fake', 'symlink/');
   var secondSymSource = path.join(__dirname + '/fixtures/fake', 'symlink-copy/');
 
-  fse.mkdirpSync(firstSymSource);
-  fse.mkdirpSync(secondSymSource);
-  fse.mkdirpSync(__dirname + '/fixtures/fake');
+  mkdirp.sync(firstSymSource);
+  mkdirp.sync(secondSymSource);
+  mkdirp.sync(__dirname + '/fixtures/fake');
 
   fs.symlinkSync(secondSymSource, filePaths[0][0]);
   fs.symlinkSync(firstSymSource, filePaths[0][1]);
@@ -24,16 +25,16 @@ function setupSymlinks(filePaths, callback){
 }
 
 function cleanUpSymlinks(callback){
-  // fse.removeSync(firstSymSource);
-  // fse.removeSync(secondSymSource);
-  fse.removeSync(__dirname + '/fixtures/fake');
+  rimraf.sync(__dirname + '/fixtures/fake');
   return callback(null);
 }
 
 test('setup', function(assert) {
 
-  if (fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.removeSync(__dirname + '/fixtures/out/mason_packages/.link');
-  fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
+  if (fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) {
+    rimraf.sync(__dirname + '/fixtures/out/mason_packages/.link');
+  }
+  mkdirp.sync(__dirname + '/fixtures/out/mason_packages/.link');
 
   assert.end();
 });

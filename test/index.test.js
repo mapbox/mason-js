@@ -5,10 +5,10 @@ var sinon = require('sinon');
 var needle = require('needle');
 var stream = require('stream');
 var log = require('npmlog');
-var fse = require('fs-extra');
 var index = require('../');
 var sym = require('../lib/symlink');
 var rimraf = require('rimraf');
+var mkdirp = require('mkdirp');
 
 test('setup', function(assert) {
   if (!fs.existsSync(__dirname + '/fixtures/out')) fs.mkdirSync(__dirname + '/fixtures/out');
@@ -50,7 +50,7 @@ test('[install] installs a package', function(assert) {
     assert.equal(log.info.getCall(1).args[0], 'tarball');
     assert.equal(log.info.getCall(1).args[1], 'done parsing tarball for protozero');
     assert.equal(fs.existsSync(outfile), true);
-    fse.removeSync(path.join(__dirname + '/fixtures/out', 'protozero'));
+    rimraf.sync(path.join(__dirname + '/fixtures/out', 'protozero'));
     log.info.restore();
     needle.get.restore();
     assert.end();
@@ -58,7 +58,9 @@ test('[install] installs a package', function(assert) {
 });
 
 test('[symlink] links files', function(assert) {
-  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
+  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) {
+    mkdirp.sync(__dirname + '/fixtures/out/mason_packages/.link');
+  }
 
   var appDir = process.cwd();
   var symlinkPath = path.join(appDir, 'test/fixtures/out/mason_packages/.link');
@@ -84,7 +86,7 @@ test('[symlink] links files', function(assert) {
     assert.equal(fs.existsSync(proto), true);
     assert.equal(fs.existsSync(cairo), true);
     assert.equal(log.info.getCall(0).args[0], 'Symlinked: ');
-    fse.removeSync(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'));
+    rimraf.sync(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'));
     sym.buildLinkPaths.restore();
     log.info.restore();
     assert.end();
@@ -99,7 +101,9 @@ test('cleanup', function(assert) {
 });
 
 test('[symlink] file to link doesnt exist', function(assert) {
-  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) fse.mkdirpSync(__dirname + '/fixtures/out/mason_packages/.link');
+  if (!fs.existsSync(__dirname + '/fixtures/out/mason_packages/.link')) {
+    mkdirp.sync(__dirname + '/fixtures/out/mason_packages/.link');
+  }
 
   var appDir = process.cwd();
   var symlinkPath = path.join(appDir, 'test/fixtures/out/mason_packages/.link');
@@ -121,9 +125,7 @@ test('[symlink] file to link doesnt exist', function(assert) {
 
   index.link(masonPath, function(err) {
     assert.equal(/ENOENT: no such file or directory/.test(err.message), true);
-    fse.remove(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'), function(err) {
-      if (err) return console.error(err);
-    });
+    rimraf.sync(path.join(__dirname, '/fixtures/out', 'mason_packages/.link'));
     sym.buildLinkPaths.restore();
     log.info.restore();
     assert.end();

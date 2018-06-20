@@ -7,7 +7,7 @@ var retriever = require('../lib/retrieve_package');
 var rimraf = require('rimraf');
 var stream = require('stream');
 var log = require('npmlog');
-var fse = require('fs-extra');
+var mkdirp = require('mkdirp');
 
 global.appRoot = process.cwd();
 
@@ -17,7 +17,9 @@ test('setup', function(assert) {
 });
 
 test('[place binary] places binary', function(assert) {
-  if (!fs.existsSync(__dirname + '/fixtures/out/protozero/1.5.1')) fse.mkdirpSync(__dirname + '/fixtures/out/protozero/1.5.1');
+  if (!fs.existsSync(__dirname + '/fixtures/out/protozero/1.5.1')) {
+    mkdirp.sync(__dirname + '/fixtures/out/protozero/1.5.1');
+  }
 
   var src = path.join(__dirname + '/fixtures/', 'protozero1.5.1.tar.gz');
   var dst = path.join(__dirname + '/fixtures/out', 'protozero/1.5.1');
@@ -51,9 +53,7 @@ test('[place binary] places binary', function(assert) {
     assert.equal(log.info.getCall(0).args[0], 'tarball');
     assert.equal(log.info.getCall(0).args[1], 'done parsing tarball for protozero');
     assert.equal(fs.existsSync(outfile), true);
-    fse.remove(path.join(__dirname + '/fixtures/out', 'protozero'), err => {
-      if (err) return console.error(err);
-    });
+    rimraf.sync(path.join(__dirname, '/fixtures/out', 'protozero'));
     log.info.restore();
     needle.get.restore();
     assert.end();
@@ -61,7 +61,9 @@ test('[place binary] places binary', function(assert) {
 });
 
 test('[place binary] gets a needle error', function(assert) {
-  if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
+  if (!fs.existsSync(__dirname + '/fixtures/out/protozero1.5.1')) {
+    fs.mkdirSync(__dirname + '/fixtures/out/protozero1.5.1');
+  }
 
   var options = {
     name: 'boost',
@@ -196,9 +198,7 @@ test('[check library] creates directory paths', function(assert) {
   retriever.checkLibraryExists(options, function(err, res) {
     assert.equal(res, false);
     assert.equal(fs.existsSync(__dirname + '/fixtures/out/boost/1.3.0'), true);
-    fse.remove(path.join(__dirname + '/fixtures/out', 'boost'), function(err) {
-      if (err) return console.error(err);
-    });
+    rimraf.sync(path.join(__dirname, '/fixtures/out', 'boost'));
     assert.end();
   });
 });

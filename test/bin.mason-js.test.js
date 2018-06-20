@@ -8,7 +8,6 @@ var mason = require('../bin/mason-js');
 var rimraf = require('rimraf');
 var stream = require('stream');
 var log = require('npmlog');
-var fse = require('fs-extra');
 var index = require('../');
 var appDir = process.cwd();
 var sym = require('../lib/symlink.js');
@@ -60,7 +59,7 @@ test('[install] installs a package from mason-versions.ini', function(assert) {
     assert.equal(log.info.getCall(2).args[1], 'done parsing tarball for protozero');
     assert.equal(result, true);
 
-    fse.removeSync(path.join(__dirname + '/fixtures/out', 'protozero'));
+    rimraf.sync(path.join(__dirname + '/fixtures/out', 'protozero'));
     reader.fileReader.restore();
     log.info.restore();
     needle.get.restore();
