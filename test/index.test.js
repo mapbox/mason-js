@@ -62,7 +62,7 @@ test('[symlink] links files', function(assert) {
 
   var appDir = process.cwd();
   var symlinkPath = path.join(appDir, 'test/fixtures/out/mason_packages/.link');
-  
+
   var paths = [
     [appDir + '/test/fixtures/headers/protozero/1.5.1',
       symlinkPath
@@ -71,7 +71,7 @@ test('[symlink] links files', function(assert) {
       symlinkPath
     ]
   ];
-  
+
   sinon.spy(log, 'info');
 
   sinon.stub(sym, 'buildLinkPaths').returns(paths);
@@ -103,7 +103,7 @@ test('[symlink] file to link doesnt exist', function(assert) {
 
   var appDir = process.cwd();
   var symlinkPath = path.join(appDir, 'test/fixtures/out/mason_packages/.link');
-  
+
   var paths = [
     [appDir + '/test/fixtures/headers/protozro/1.5.1',
       symlinkPath
@@ -112,7 +112,7 @@ test('[symlink] file to link doesnt exist', function(assert) {
       symlinkPath
     ]
   ];
-  
+
   sinon.spy(log, 'info');
 
   sinon.stub(sym, 'buildLinkPaths').returns(paths);

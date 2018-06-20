@@ -19,7 +19,7 @@ function link(masonPath, callback){
       return callback(null, result);
     });
   });
-}  
+}
 
 function install(packageList, callback) {
   var libraries = packageList;
@@ -32,7 +32,7 @@ function install(packageList, callback) {
         if (!exists) {
           q.defer(loader.placeBinary, options);
         }
-      }); 
+      });
     }
   });
 
@@ -45,5 +45,5 @@ function install(packageList, callback) {
 
 
 module.exports = {
-  install:install, 
+  install:install,
   link:link};

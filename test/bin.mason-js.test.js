@@ -47,7 +47,7 @@ test('[install] installs a package from mason-versions.ini', function(assert) {
   sinon.spy(log, 'info');
 
   sinon.stub(needle, 'get').returns(mockStream);
-  
+
   var masonPath = './test/fixtures/fake-mason-versions.ini';
   var args = { _: [ 'install' ] };
 
@@ -57,9 +57,9 @@ test('[install] installs a package from mason-versions.ini', function(assert) {
     assert.equal(log.info.getCall(1).args[0], 'check');
     assert.equal(log.info.getCall(1).args[1], 'checked for protozero (not found locally)');
     assert.equal(log.info.getCall(2).args[0], 'tarball');
-    assert.equal(log.info.getCall(2).args[1], 'done parsing tarball for protozero');  
+    assert.equal(log.info.getCall(2).args[1], 'done parsing tarball for protozero');
     assert.equal(result, true);
-  
+
     fse.removeSync(path.join(__dirname + '/fixtures/out', 'protozero'));
     reader.fileReader.restore();
     log.info.restore();
@@ -74,7 +74,7 @@ test('[install] no mason-versions.ini', function(assert) {
     var err = new Error('File doesnt exist');
     return callback(err);
   });
-  
+
   var masonPath = './test/fixtures/bad-verions.ini';
   var args = { _: [ 'install' ] };
 
@@ -90,7 +90,7 @@ test('[installs] single package', function(assert) {
   sinon.stub(index, 'install').callsFake(function(packages, callback){
     return callback(null, true);
   });
-  
+
   var masonPath = './test/fixtures/fake-mason-versions.ini';
   var args = { _: [ 'install', 'protozero=1.5.1' ], type: 'header' };
 
@@ -134,4 +134,3 @@ test('cleanup', function(assert) {
     assert.end();
   });
 });
-

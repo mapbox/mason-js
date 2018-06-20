@@ -58,7 +58,7 @@ test('reads ini file correctly', function(assert) {
 test('[package object] generates package object correctly', function(assert) {
   var p = 'protozero=1.5.1';
   var expected = {
-    name: 'protozero', 
+    name: 'protozero',
     version: '1.5.1'
   };
 
@@ -132,7 +132,7 @@ test('[add package to file] adds header package to mason-versions.ini', function
   });
 });
 
-test('[add package to file] adds compiled package to mason-versions.ini', function(assert) { 
+test('[add package to file] adds compiled package to mason-versions.ini', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'fake-mason-versions.ini');
   var dst = path.join(__dirname + '/fixtures/out', 'fake-mason-versions.ini');
   var content = fs.readFileSync(src);
@@ -151,7 +151,7 @@ test('[add package to file] adds compiled package to mason-versions.ini', functi
   });
 });
 
-test('[add package to file] adds [compiled] header and package to mason-versions.ini', function(assert) { 
+test('[add package to file] adds [compiled] header and package to mason-versions.ini', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'mv-no-compiled.ini');
   var dst = path.join(__dirname + '/fixtures/out', 'mv-no-compiled.ini');
   var content = fs.readFileSync(src);
@@ -171,12 +171,12 @@ test('[add package to file] adds [compiled] header and package to mason-versions
   });
 });
 
-test('[add package to file] adds [headers] header and header package to mason-versions.ini', function(assert) { 
+test('[add package to file] adds [headers] header and header package to mason-versions.ini', function(assert) {
   var src = path.join(__dirname + '/fixtures/', 'mv-no-header.ini');
   var dst = path.join(__dirname + '/fixtures/out', 'mv-no-header.ini');
   var content = fs.readFileSync(src);
   fs.writeFileSync(dst, content);
-  
+
   var package = 'crazynewpackage=1.5.1';
   var type = 'header';
   var expected = '[headers]\ncrazynewpackage=1.5.1\n[compiled]\nllvm=32.3';
