@@ -32,14 +32,11 @@
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "d3-queue": "^3.0.7",
-    "extfs": "0.0.7",
     "fs-extra": "^4.0.2",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "needle": "^2.2.0",
     "npmlog": "^4.1.2",
-    "request": "^2.83.0",
     "tar": "^4.0.2"
   }
 }
