@@ -1,3 +1,6 @@
+❌ **UNMAINTAINED: this project is no longer maintained and no additional development is planned. Nor is any kind of deprecation planned. Rather this code is now frozen. If you are depending on this module in any of your applications, it is recommended you remove the dependency and/or find a replacement solution**
+
+
 `circleCI` [![CircleCI](https://circleci.com/gh/mapbox/mason-js.svg?style=svg)](https://circleci.com/gh/mapbox/mason-js)
 
 [![codecov](https://codecov.io/gh/mapbox/mason-js/branch/master/graph/badge.svg)](https://codecov.io/gh/mapbox/mason-js)
